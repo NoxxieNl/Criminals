@@ -18,4 +18,5 @@
 // Define website root dir
 require_once('init.php');
 
+// Show index page
 $tpl->display('index.tpl');

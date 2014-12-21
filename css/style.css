@@ -1,0 +1,191 @@
+body { 
+    background: #4E6F81; 
+    color: #000000; 
+    font-family: 'verdana'; 
+    font-size: 8pt; 
+}
+
+a {
+    text-decoration: none;
+}
+
+.header {
+    border: 2px solid #000000;
+    background: #456272;
+    
+}
+    .header p {
+        text-align: center;
+        font-size: 30px;
+        margin: 0px;
+    }
+    
+.menu {
+    margin-top: 10px;
+    width: 10%;
+    
+    float: left;
+}
+    .menu .information {
+        text-align: center;
+        font-weight: bold;
+    }
+    .menu .information p {
+        margin: 0px;
+    }
+    .menu .information p.time {
+        border: 1px solid #000000;
+        background: #344955;
+        
+        font-weight: normal;
+        width: 50%;
+        margin: 5px auto;
+    }
+    
+    .menu #item {
+        border: 2px solid #000000;
+        background: #638BA1;
+        
+        margin-bottom: 20px;
+    }
+    .menu #item #header {
+        background: #496879;
+        font-size: 12px;
+        letter-spacing: 5px;
+        font-weight: bold;
+        text-align: center;
+    }
+    
+    .menu #item li, .menu #item ul {
+        padding: 0px;
+        margin: 0px;
+        
+        list-style: none;
+    }
+    
+    .menu #item ul {
+        margin: 5px 0px 5px 10px;
+        
+    }
+    
+    .menu #item ul a {
+        color: #000000;
+    }
+    
+    .menu #item ul a:hover {
+        color: #B1C3CD;
+    }
+
+.content {
+    float: right;
+    width: 89%;
+    
+    margin-top: 10px;
+}
+
+.footer {
+    clear: both;
+    width: 100%;
+    
+    border: 2px solid #000000;
+    background: #456272;
+}
+
+.footer p {
+    text-align: center;
+    margin: 0px;
+}
+
+label, input {
+    display: block;
+}
+label {
+    margin: 2px 0px 2px 0px;
+}
+
+input.button {
+    margin-top: 10px;
+}
+
+.error, .info, .warning, .success {
+    border: 1px solid;
+    margin: 5px 0px;
+    padding: 10px;
+    background-repeat: no-repeat;
+}
+
+.success {
+    color: #4f8a10;
+    background-color: #dff2bf;
+}
+.error {
+    background-color: #ffbaba;
+    color: #d8000c;
+}
+
+.info {
+    color: #00529b;
+    background-color: #bde5f8;
+}
+
+.ingameContainer {
+    width: 80%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.ingameContainer h2.headline, .ingameContainer p.headline {
+    width: 80%;
+}
+.ingameContainer p.headline.important {
+    font-size: 12px;
+}
+
+.center {
+    display: block;
+    width: 80%;
+    margin-left: auto;
+    margin-top: auto;
+}
+
+.coll {
+    background-color: #333333;
+    color: #ffffff;
+    
+    float: left;
+}
+
+.collContainer { width: 100%; float: left; display: block; margin: 1px; }
+.coll.large { width: 40%; }
+.coll.normal { width: 30%; }
+.coll.small { width: 10%; min-width: 100px; }
+.coll.headerCol { text-align: center; font-size: 12px; font-weight: bold; }
+.coll.middle {margin: 0px 2px 0px 2px;}
+.coll.subjet, label { font-weight: bold; }
+
+label {margin: 10px 0px 5px 0px; }
+
+input.small, select.small { width: 100px;}
+input.normal, select.normal { width: 150px; }
+input.large, select.large { width: 200px; }
+
+p			{ color: #000000; font-family: "verdana"; font-size: 8pt; cursor: default; }
+a:link			{ color: #FFFFFF; font-family: "verdana"; font-size: 8pt; text-decoration: none; }
+a:visited		{ color: #FFFFFF; font-family: "verdana"; font-size: 8pt; text-decoration: none; }
+a:active		{ color: #FFFFFF; font-family: "verdana"; font-size: 8pt; text-decoration: none; }
+a:hover			{ color: #B1C3CD; font-family: "verdana"; font-size: 8pt; text-decoration: none; }
+
+textarea		{ border: 1px solid #000000; background: #344955; font-size: 8pt; }
+input			{ border: 1px solid #000000; background: #344955; font-size: 8pt; }
+input.normalRadio	{ border: none; background: none; }
+select			{ border: 1px solid #000000; background: #344955; font-size: 8pt; }
+
+table			{ color: #000000; font-family: "verdana"; font-size: 8pt; }
+table.main		{ background: #4E6F81; color: #000000; font-family: "verdana"; font-size: 8pt; }
+td.subTitle		{ border: 2px solid #000000; background: #456272; color: #000000; font-family: "verdana"; font-size: 8pt; text-align: center; letter-spacing: 5px; }
+td.mainTxt		{ border: 2px solid #000000; background: #456272; font-family: "verdana"; font-size: 8pt; padding-left: 5px; }
+
+table.menu		{ border: 3px solid #000000; border-left: none; color: #000000; font-family: "verdana"; font-size: 8pt; }
+td.menuTitle		{ background: #496879; color: #000000; font-family: "verdana"; font-size: 8pt; letter-spacing: 5px; }
+td.menuLink		{ background: #638BA1; color: #000000; font-family: "verdana"; font-size: 8pt; }

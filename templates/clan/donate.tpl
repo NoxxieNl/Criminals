@@ -11,7 +11,7 @@
     </div>
     {/if}
 
-    <p>Hier kan je geld doneren ana je klan!</p>
+    <p>Hier kan je geld doneren aan je clan!</p>
     <form method="post">
         <label>Bedrag</label><input class="normal" name="amount" type="text" maxlength="10">
         <input class="button" name="submit" type="submit" value="Doneer!">

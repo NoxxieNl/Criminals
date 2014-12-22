@@ -14,12 +14,12 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  */
 
-require_once('../init.php');
+require_once('../../init.php');
 
 // Check if user is loggedin, if so no need to be here...
 if (LOGGEDIN == FALSE) { header('Location: ' . ROOT_URL . 'index.php'); }
 
-$showPage = 'clanIndex.tpl';
+$showPage = 'index';
 $error = array();
 $form_error = '';
 
@@ -33,23 +33,23 @@ if (isset($_GET['page']) AND !empty($_GET['page'])) {
         if ($userData['clan_level'] < 10) {
             $tpl->assign('error', 'Je hebt geen autorisatie voor deze pagia.');
         } else {
+            $showPage = 'delete';
             
             // check if confirmation is asked
             if (isset($_GET['confirmation'])) {
                 
                 // remove clan id from all users
-                $result = $dbCon->query('SELECT * FROM clan WHERE clan_id = "' . $userData['clan_id'] . '"');
-                while ($row = $result->fetch_assoc()) {
-                    $dbCon->query('UPDATE users SET clan_id = 0 WHERE id = "' . $userData['id'] . '"');
-                }
-                
+                $dbCon->query('UPDATE users SET clan_id = 0, clan_level = 0 WHERE clan_id = "' . $userData['clan_id'] . '"');
+            
                 // Delete the clan itself
                 $dbCon->query('DELETE FROM clans WHERE clan_id = "' . $userData['id'] . '"');
                 
                 $tpl->assign('succes', 'De clan is succesvol verwijderd.');
             } else {
                 // Show html page with confirmation option
-                $tpl->assign('confirmation', true);
+                if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+                    $tpl->assign('confirmation', true);
+                }
             }
         }
     }
@@ -61,7 +61,7 @@ if (isset($_GET['page']) AND !empty($_GET['page'])) {
         if ($userData['clan_level'] > 0) {
             $tpl->assign('error', 'Je hebt al een clan of je zit in een clan, je kan niet nog een clan aanmaken!');
         } else {
-            $showPage = 'clanCreate';
+            $showPage = 'create';
 
             // validate creation of clan
             if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -72,7 +72,7 @@ if (isset($_GET['page']) AND !empty($_GET['page'])) {
                 }
 
                 // check if name is valid
-                elseif (preg_match('/^[A-Za-z0-9_\- ]+$/', $_POST['name'])) {
+                elseif (!preg_match('/^[A-Za-z0-9_\- ]+$/', $_POST['name'])) {
                     $error[] = 'Clan naam mag alleen letters, spaties en _- tekens bevatten!';
                 } else {
 
@@ -95,8 +95,9 @@ if (isset($_GET['page']) AND !empty($_GET['page'])) {
 
                     // finnaly we can create the clan itself...
                     $dbCon->query('INSERT INTO clans (clan_name, clan_owner_id, clan_type) VALUES (
-                                                      "' . addslashes($_POST['name']) . '", "' . $userData['id'] . '", "' . $userData['type'] . '"');
+                                                      "' . addslashes($_POST['name']) . '", "' . $userData['id'] . '", "' . $userData['type'] . '")');
 
+                    $dbCon->query('UPDATE users SET clan_id = "' . $dbCon->insert_id . '", clan_level = 10 WHERE id = "' . $userData['id'] . '"');
                     $tpl->assign('success', 'De clan is aangemaakt!');
                 }
             }
@@ -110,27 +111,34 @@ if (isset($_GET['page']) AND !empty($_GET['page'])) {
         if ($userData['clan_level'] < 1) {
             $tpl->assign('error', 'Je zit momenteel niet in een clan, dan kan je deze ook niet verlaten.');
         } else {
-            $showPage = 'leaveClan';
+            $showPage = 'leave';
             
               // check if confirmation is asked
             if (isset($_GET['confirmation'])) {
                 
                 // remove user form clan
-                $dbCon->query('UPDATE users SET clan_id = 0 WHERE id = "' . $userData['id'] . '"');
-                $tpl->assign('succes', 'Je bent succesvol uit de clan gestapt!');
+                if ($userData['clan_level'] != 10) {
+                    $error[] = 'Je kan niet uit de clan stappen als je de owner bent!';
+                } else {
+                    $dbCon->query('UPDATE users SET clan_id = 0, clan_level = 0 WHERE id = "' . $userData['id'] . '"');
+                    $tpl->assign('success', 'Je bent succesvol uit de clan gestapt!');
+                }
             } else {
                 // Show html page with confirmation option
-                $tpl->assign('confirmation', true);
+                if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+                    $tpl->assign('confirmation', true);
+                }
             }
         }
     }
     
     // User wants to join a clan
     if ($_GET['page'] == 'join') {
+        $showPage = 'join';
         
         //check if user is in a clan
-        if ($userData['clan_level'] < 1) {
-            $tpl->assign('error', 'Je zit momenteel niet in een clan, dan kan je deze ook niet verlaten.');
+        if ($userData['clan_level'] > 0) {
+            $tpl->assign('error', 'Je zit momenteel al in een clan, dan kan je een nieuwe clan niet joinen!');
         } else {
             
             // validate enterd clan name
@@ -156,13 +164,7 @@ if (isset($_GET['page']) AND !empty($_GET['page'])) {
                 }
                 
                  // check for errors if found, put them into error array
-                if (count($error) > 0) {
-                    foreach ($error as $item) {
-                        $form_error .= '- ' . $item . '<br />';
-                    }
-                    $tpl->assign('form_error', $form_error);
-                } else {
-                    
+                if (count($error) < 1) {
                     // and we can let the user apply for the clan
                     $dbCon->query('INSERT INTO temp (userid, area, variable) VALUES ("' . $userData['id'] .'", "clan_join", "' . $row['clan_id'] . '")');
                     $tpl->assign('success', 'Je bent succesvol aangemeld voor de clan ' . $row['clan_name'] . '! De mensen die er over gaan zullen je aanvraag zo spoedig mogelijk bekijken!');
@@ -192,11 +194,13 @@ if (isset($_GET['page']) AND !empty($_GET['page'])) {
         
     }
 } else {
-    if ($userData['clan_id'] == 0) {
-        $showPage = 'clanOverview.tpl';
-    } else {
-        $showPage = 'clanIntern.tpl';
-    }
+    $showPage = 'index';
 }
 
+if (count($error) > 0) {
+    foreach ($error as $item) {
+        $form_error .= '- ' . $item . '<br />';
+    }
+    $tpl->assign('form_error', $form_error);
+}
 $tpl->display('clan/' . $showPage . '.tpl');

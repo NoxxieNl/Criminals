@@ -71,19 +71,21 @@
                         <li><a href="{$ROOT_URL}ingame/sps.php">Steen, papier & schaar</a></li>
                         <li><a href="{$ROOT_URL}ingame/paardenrace.php">Paardenrace</a></li>
                         <li><a href="{$ROOT_URL}ingame/hogerlager.php">Hoger of lager</a></li>
-                    </ul>
-                </div>
-                
-                <div id="item">
-                    <div id="header">Misdaad</div>
-                    <ul>
                         <li><a href="{$ROOT_URL}ingame/bankroven.php">Bankroven</a></li>
                     </ul>
                 </div>
                 {/if}
                 
+                <div id="item">
+                    <div id="header">Clan</div>
+                    <ul>
+                        {if $clan_id == 0}<li><a href="{$ROOT_URL}ingame/clan/index.php?page=join">Join clan</a>{/if}
+                        {if $clan_id == 0}<li><a href="{$ROOT_URL}ingame/clan/index.php?page=create">Maak clan</a>{/if}
+                    </ul>
+                </div>
+                
                 {if isset($level) AND $level > 0}
-                 <div id="item">
+                <div id="item">
                     <div id="header">Admin</div>
                     <ul>
                         <li><a href="{$ROOT_URL}admin/adminBasic.php">Basis wijzigingen</a></li>

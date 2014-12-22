@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (!isset($_POST['amount']) OR empty($_POST['amount'])) {
         $error[] = 'Er is geen bedrag ingevuld!';
     }
-    elseif (!is_numer($_POST['amount'])) {
+    elseif (!is_numeric($_POST['amount'])) {
         $error[] = 'Het bedrag wat is ingegeven is niet numeriek!';
     }
     else {

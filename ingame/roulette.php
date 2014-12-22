@@ -80,11 +80,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         // user won
         if ($numberWon == $numberPlayer) {
-            $dbCon->query('UPDATE users SET cash = (cash + "' . (int) ($_POST['gambleMoney'] * 36) . '") WHERE id = "' . $userData['id'] . '"');
+            $dbCon->query('UPDATE users SET cash = (cash + "' . (int) (addslashes($_POST['gambleMoney']) * 36) . '") WHERE id = "' . $userData['id'] . '"');
             $tpl->assign('success', 'Je hebt de roulette gewonnen je wint 36x je inzet!');
         } else {
             // user lost
-            $dbCon->query('UPDATE users SET cash = (cash - "' . $_POST['gambleMoney'] . '") WHERE id = "' . $userData['id'] . '"');
+            $dbCon->query('UPDATE users SET cash = (cash - "' . (int) addslashes($_POST['gambleMoney']) . '") WHERE id = "' . $userData['id'] . '"');
             $tpl->assign('form_error', 'Helaas je hebt verloren, gelukkig heb je alleen je inzet verloren!');
         }
     }

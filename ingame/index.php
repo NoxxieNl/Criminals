@@ -52,6 +52,10 @@ if($row['Count'] == null) {
     $row['Count'] = 0;
 }
 
+// Get unread messages
+$message = $dbCon->query('SELECT message_id FROM messages WHERE message_to_id = "' . $userData['id'] . '" AND message_deleted_to = 0 AND message_read = 0')->num_rows;
+$tpl->assign('message_count', $message);
+
 $tpl->assign('clicks_today', $row['Count']);
 
 $tpl->display('ingame/index.tpl');

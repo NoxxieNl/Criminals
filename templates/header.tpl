@@ -42,6 +42,7 @@
                         <li><a href="{$ROOT_URL}stats.php">Statistieken</a></li>
                         <li><a href="{$ROOT_URL}wetboek.php">Wetboek</a></li>
                         <li><a href="{$ROOT_URL}prijzen.php">Prijzen</a></li>
+                        {if $LOGGEDIN == TRUE}<li><a href="{$ROOT_URL}ingame/list.php">Ledenlijst</a>{/if}
                     </ul>
                 </div>
                 <div id="item">
@@ -50,6 +51,7 @@
                         {if $LOGGEDIN == FALSE}<li><a href="{$ROOT_URL}register.php">Aanmelden</a></li>{/if}
                         {if $LOGGEDIN == FALSE} <li><a href="{$ROOT_URL}login.php">Login</a></li>{/if}
                         
+                        {if $LOGGEDIN == TRUE}<li><a href="{$ROOT_URL}ingame/message.php">Berichten</a>{/if}
                         {if $LOGGEDIN == TRUE} <li><a href="{$ROOT_URL}ingame/editProfiel.php">Profiel aanpassen</a></li>{/if}
                         {if $LOGGEDIN == TRUE} <li><a href="{$ROOT_URL}ingame/typewijzigen.php">Type wijzigen</a></li>{/if}
                         {if $LOGGEDIN == TRUE}<li><a href="{$ROOT_URL}ingame/doneren.php">Doneren</a>{/if}

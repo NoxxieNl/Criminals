@@ -33,7 +33,7 @@
             </tr>
             <tr>
                 <td class="coll subject">Berichten:</td>
-                <td class="coll">0</td>
+                <td class="coll"><a href="{$ROOT_URL}ingame/message.php">{$message_count}</a></td>
                 <td class="coll">&nbsp;</td>
                 <td class="coll subject">Power Upgrade:</td>
                 <td class="coll">{$extra_attack_power}</td>

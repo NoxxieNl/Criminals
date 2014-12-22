@@ -1,6 +1,11 @@
 {include '../header.tpl'}
 <div class="content">
     <p><h1>Gebruikerslijst</h1></p>
+    {if isset($success)}
+    <div class="success">
+        {$success}
+    </div>
+    {/if}
     <div class="ingameContainer">
         <table width="80%" border="0">
             <tr>
@@ -10,6 +15,7 @@
                 <td class="coll"><a href="{$ROOT_URL}ingame/list.php?order=bank">Bank:</a></td>
                 <td class="coll"><a href="{$ROOT_URL}ingame/list.php?order=power">Power:</a></td>
                 <td class="coll">Aanvallen:</td>
+                <td class="coll">Bericht:</td>
             </tr>
             
             {foreach from=$list item=item}
@@ -18,15 +24,19 @@
                 <td class="coll">{$item['type']}</td>
                 <td class="coll">{$item['cash']}</td>
                 <td class="coll">{$item['bank']}</td>
-                <td class="coll">{$item['power']}</td>
-                <td class="coll">{if $userData['type'] == 3 && $item['type_id'] == 3}Aanval niet moglijk{else}<a href="{$ROOT_URL}ingame/attack.php?id={$item['id']}">Aanvallen</a>{/if}</td>
+                <td class="coll">{$item['attack_power']}</td>
+                <td class="coll">{if $type == 3 && $item['type_id'] == 3}Niet moglijk
+                                 {elseif $username == $item['username']}Niet mogelijk
+                                 {else}<a href="{$ROOT_URL}ingame/attack.php?id={$item['id']}">Aanvallen</a>{/if}</td>
+                <td class="coll">{if $username == $item['username']}Niet mogelijk{else}<a href="{$ROOT_URL}ingame/message.php?page=new&id={$item['id']}">Verstuur bericht</a>{/if}</td>
             </tr>
             {/foreach}
             
         </table>
         <div class="center">
-            {for $i=1 to $pagination['tPage']}
-                {if $i == $pagination['cPage'}
+            <br />
+            Pagina: {for $i=1 to $pagination['tPage']}
+                {if $i == $pagination['cPage']}
                     {$i}
                 {else}
                     <a href="{$ROOT_URL}ingame/list.php?order={$order}&start={$pagination['pageBegin'][$i]}">{$i}</a>

@@ -20,6 +20,16 @@ require_once('../init.php');
 if (LOGGEDIN == FALSE) { header('Location: ' . ROOT_URL . 'index.php'); }
 $listArray = array();
 
+// user online list check
+ if (isset($_POST['onlineList'])) {
+    $result = $dbCon->query('UPDATE users SET showonline = "' . ($userData['showonline'] == 1 ? 0 : 1) . '" WHERE id = "' . $userData['id'] . '"');
+    $tpl->assign('success', 'Online status is succesvol gewijzigd!');
+        
+    $userData['showonline'] = ($userData['showonline'] == 1 ? 0 : 1);
+    $tpl->assign('showonline', $userData['showonline']);
+}
+
+
 // Check if user wants a diffirent sorting
 if (!isset($_GET['order']) OR empty($_GET['order'])) {
     $orderBy = 'username';
@@ -41,7 +51,7 @@ if (!isset($_GET['start']) OR empty($_GET['start'])) {
         $start = $_GET['start'];
     }
 }
-$listResult = $dbCon->query('SELECT id, username, attack_power, type, cash, bank, clicks FROM users WHERE activated = 1 ORDER BY "' . addslashes($orderBy) . '" LIMIT "' . addslashes($start) . '",50');
+$listResult = $dbCon->query('SELECT id, username, attack_power, type, cash, bank, clicks FROM users WHERE activated = 1 AND showonline = 1 ORDER BY "' . addslashes($orderBy) . '" LIMIT ' . addslashes($start) . ',50');
 while ($row = $listResult->fetch_assoc()) {
     $listArray[$row['id']]['id'] = $row['id'];
     $listArray[$row['id']]['username'] = $row['username'];
@@ -58,7 +68,7 @@ if (($start / 50) != 0) {
     $start = 0;
 }
 
-$pageResult = $dbCon->query('SELECT id FROM users')->count_rows;
+$pageResult = $dbCon->query('SELECT id FROM users')->num_rows;
 $pageCount = ceil($pageResult / 50);
 
 // Get current active page
@@ -79,6 +89,14 @@ for ($i = 1; $i <= $pageCount; $i++) {
     $pagination['pageBegin'][$i] = (($i - 1) * 50);
 }
 $tpl->assign('pagination', $pagination);
+
+// Get current online users from view
+$result = $dbCon->query('SELECT * FROM onlineUsers');
+$onlineUsers = array();
+while ($row = $result->fetch_assoc()) {
+    $onlineUsers[$row['showonline']] = $row['Count'];
+}
+$tpl->assign('onlineusers', $onlineUsers);
 
 // Output page
 $tpl->assign('order', $orderBy);

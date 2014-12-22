@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if (isset($_POST['subject']) && !empty($_POST['subject'])) {
                 $result = $dbCon->query('SELECT id FROM users');
                 while ($row = $result->fetch_assoc()) {
-                    $dbCon->query('INSERT INTO message (from_user_id, to_user_id, subject, message) VALUES (
+                    $dbCon->query('INSERT INTO messages (message_from_id , message_to_id, message_subject, message_message) VALUES (
                                                         "' . $userData['id'] . '", "' . $row['id'] . '", "' . addslashes($_POST['subject']) . '",
                                                         "' . nl2br(addslashes($_POST['message']) . '")')) or die(mysqli_error($dbCon));
                     

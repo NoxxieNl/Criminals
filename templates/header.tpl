@@ -86,6 +86,7 @@
                         <li><a href="{$ROOT_URL}ingame/clan/hq.php?page=members">Ledenlijst</a>
                         {if $clan_level != 10}<li><a href="{$ROOT_URL}ingame/clan/index.php?page=leave">Clan verlaten</a>{/if}
                         {if $clan_level > 5}<li><a href="{$ROOT_URL}ingame/clan/hq.php?page=recruits">Recruits</a>{/if}
+                        {if $clan_level > 6}<li><a href="{$ROOT_URL}ingame/clan/shop.php">Clan shop</a>{/if}
                         {if $clan_level == 10}<li><a href="{$ROOT_URL}ingame/clan/hq.php?page=cOwner">Owner wijzigen</a>{/if}
                         {/if}    
                     </ul>

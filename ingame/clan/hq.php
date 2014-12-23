@@ -99,57 +99,74 @@ if (isset($_GET['page']) AND !empty($_GET['page'])) {
                     if (!isset($_POST['id']) OR empty($_POST['id'])) {
                         $error[] = 'Je hebt geen user aangevinkt!';
                     } else {
-                     
-                        // Recruits denied!
-                        if ($_POST['action'] == 1) {
-                             foreach ($_POST['id'] as $id => $status) {
-                                 $member = $dbCon->query('SELECT id, clan_id FROM users WHERE id = "' . addslashes($id) . '"');
-                                 if ($member->num_rows < 1) { 
-                                     $error[] = 'Dit lid bestaat niet...';
-                                 }
-                                 
-                                 $temp = $dbCon->query('SELECT * FROM temp WHERE userid = "' . addslashes($id) . '" AND area = "clan_join"');
-                                 if ($temp->num_rows < 1) {
-                                    $error[] = 'Dit lid heeft geen applicatie lopen voor een clan...';
-                                 } else {
-                                    $fTemp = $temp->fetch_assoc();
-                                    if ($fTemp['variable'] != $userData['clan_id']) {
-                                        $error[] = 'Je kan geen leden weigeren voor een andere clan...';
-                                    } else {
-                                        $dbCon->query('DELETE FROM temp WHERE userid = "' . addslashes($id) . '" AND area = "clan_join"');
-                                    }
-                                 }
-                             }
-                             
-                             if (count($error) < 1) {
-                                 $tpl->assign('success', 'De geselecteerde aanvragen zijn met succes afgewezen!');
-                             }
-                        }
-                        else {
-                            // Recruits accepted!
-                            foreach ($_POST['id'] as $id => $status) {
-                                 $member = $dbCon->query('SELECT id, clan_id FROM users WHERE id = "' . addslashes($id) . '"');
-                                 if ($member->num_rows < 1) { 
-                                     $error[] = 'Dit lid bestaat niet...';
-                                 }
-                                 
-                                 $temp = $dbCon->query('SELECT * FROM temp WHERE userid = "' . addslashes($id) . '" AND area = "clan_join"');
-                                 if ($temp->num_rows < 1) {
-                                    $error[] = 'Dit lid heeft geen applicatie lopen voor een clan...';
-                                 } else {
-                                    $fTemp = $temp->fetch_assoc();
-                                    if ($fTemp['variable'] != $userData['clan_id']) {
-                                        $error[] = 'Je kan geen leden accepteren voor een andere clan...';
-                                    } else {
-                                        $dbCon->query('DELETE FROM temp WHERE userid = "' . addslashes($id) . '" AND area = "clan_join"');
-                                        $dbCon->query('UPDATE users SET clan_id = "' . $userData['clan_id'] . '", clan_level = 1 WHERE id = "' . addslashes($id) . '"');
-                                    }
-                                 }
-                             }
-                             
-                             if (count($error) < 1) {
-                                 $tpl->assign('success', 'De geselecteerde aanvragen zijn met succes geaccepteerd!');
-                             }
+                        $houseSpace = $dbCon->query('SELECT item_count FROM clan_items WHERE clan_id = "' . $userData['clan_id'] . '" AND item_id = 27');
+                        
+                        if ($houseSpace->num_rows == 0) {
+                            $error[] = 'Je moet eerst huizen hebben wil je leden aannemen!';
+                        } else {
+                            $houseFetch = $houseSpace->fetch_assoc();
+                            $memberCount = $dbCon->query('SELECT id FROM users WHERE clan_id = "' . $userData['clan_id'] . '"');
+                            if (($houseSpace['item_count'] * 5) < $memberCount) {
+                                $error[] = 'Je kan niet meer leden aannemen, de huizen zitten al vol!';
+                            } else {
+                                // Recruits denied!
+                                if ($_POST['action'] == 1) {
+                                     foreach ($_POST['id'] as $id => $status) {
+                                         $member = $dbCon->query('SELECT id, clan_id FROM users WHERE id = "' . addslashes($id) . '"');
+                                         if ($member->num_rows < 1) { 
+                                             $error[] = 'Dit lid bestaat niet...';
+                                         }
+
+                                         $temp = $dbCon->query('SELECT * FROM temp WHERE userid = "' . addslashes($id) . '" AND area = "clan_join"');
+                                         if ($temp->num_rows < 1) {
+                                            $error[] = 'Dit lid heeft geen applicatie lopen voor een clan...';
+                                         } else {
+                                            $fTemp = $temp->fetch_assoc();
+                                            if ($fTemp['variable'] != $userData['clan_id']) {
+                                                $error[] = 'Je kan geen leden weigeren voor een andere clan...';
+                                            } else {
+                                                $dbCon->query('DELETE FROM temp WHERE userid = "' . addslashes($id) . '" AND area = "clan_join"');
+                                            }
+                                         }
+                                     }
+
+                                     if (count($error) < 1) {
+                                         $tpl->assign('success', 'De geselecteerde aanvragen zijn met succes afgewezen!');
+                                     }
+                                }
+                                else {
+                                    // Recruits accepted!
+                                    foreach ($_POST['id'] as $id => $status) {
+                                         $member = $dbCon->query('SELECT id, clan_id FROM users WHERE id = "' . addslashes($id) . '"');
+                                         if ($member->num_rows < 1) { 
+                                             $error[] = 'Dit lid bestaat niet...';
+                                         }
+
+                                         $temp = $dbCon->query('SELECT * FROM temp WHERE userid = "' . addslashes($id) . '" AND area = "clan_join"');
+                                         if ($temp->num_rows < 1) {
+                                            $error[] = 'Dit lid heeft geen applicatie lopen voor een clan...';
+                                         } else {
+                                            $fTemp = $temp->fetch_assoc();
+                                            if ($fTemp['variable'] != $userData['clan_id']) {
+                                                $error[] = 'Je kan geen leden accepteren voor een andere clan...';
+                                            } else {
+                                                if ($houseFetch['item_count'] < $memberCount) {
+                                                    $error[] = 'Je kan niet meer leden aannemen, niet alle geselecteerde leden zijn aangenomen!';
+                                                } else {
+                                                    $dbCon->query('DELETE FROM temp WHERE userid = "' . addslashes($id) . '" AND area = "clan_join"');
+                                                    $dbCon->query('UPDATE users SET clan_id = "' . $userData['clan_id'] . '", clan_level = 1 WHERE id = "' . addslashes($id) . '"');
+
+                                                    $houseFetch['item_count']++;
+                                                }
+                                            }
+                                        }
+                                     }
+
+                                     if (count($error) < 1) {
+                                         $tpl->assign('success', 'De geselecteerde aanvragen zijn met succes geaccepteerd!');
+                                     }
+                                }
+                            }
                         }
                     }
                 }

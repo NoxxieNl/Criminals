@@ -26,7 +26,7 @@ if (LOGGEDIN == FALSE) { header('Location: ' . ROOT_URL . 'index.php'); }
 if ($userData['clan_id'] == 0) { header('Location: ' . ROOT_URL . 'ingame/clan/index.php'); }
 
 // Check if user has clan access to this page, if not no need to be here..
-if ($userData['clan_level'] > 8) { header('Location: ' . ROOT_URL . 'ingame/clan/index.php'); }
+if ($userData['clan_level'] < 7) { header('Location: ' . ROOT_URL . 'ingame/clan/index.php'); }
 
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {

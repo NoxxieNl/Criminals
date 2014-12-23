@@ -14,20 +14,22 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  */
 
-require_once('../init.php');
-
-// Check if user is loggedin, if not no need to be here...
-if (LOGGEDIN == FALSE) { header('Location: ' . ROOT_URL . 'index.php'); }
+require_once('../../init.php');
 
 $error = array();
 $form_error = '';
+
+// Check if user is loggedin, if so no need to be here...
+if (LOGGEDIN == FALSE) { header('Location: ' . ROOT_URL . 'index.php'); }
+
+// Check if user has clan access to this page, if not no need to be here..
+if ($userData['clan_level'] < 7) { header('Location: ' . ROOT_URL . 'ingame/clan/index.php'); }
 
 
 if (isset($_GET['page']) AND !empty($_GET['page'])) {
     if ($_GET['page'] == 'sell') {
         $showPage = 'sell';
-        
-        // user has told what he want to sell, sell it!
+       // user has told what he want to sell, sell it!
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             foreach ($_POST as $item => $value) {
                 
@@ -40,26 +42,29 @@ if (isset($_GET['page']) AND !empty($_GET['page'])) {
                             $itemResult = $dbCon->query('SELECT item_name FROM items WHERE item_id = "' . addslashes($item) . '"')->fetch_assoc();
                             $error[] = 'De opgegeven waarden voor het verkopen van een ' . $itemResult['item_name'] . ' is niet numeriek!';
                         } else {
-                            $itemResult = $dbCon->query('SELECT item_name, item_count FROM user_items
-                                                                            LEFT JOIN items ON user_items.item_id = items.item_id WHERE user_items.item_id = "' . addslashes($item) . '" AND user_id = "'  . $userData['id'] . '"')->fetch_assoc();
+                            $itemResult = $dbCon->query('SELECT item_name, item_count FROM clan_items
+                                                                            LEFT JOIN items ON clan_items.item_id = items.item_id WHERE clan_items.item_id = "' . addslashes($item) . '" AND clan_id = "'  . $userData['clan_id'] . '"')->fetch_assoc();
                             
                             if ($itemResult['item_count'] < $value) {
                                 $error[] = 'Je hebt meer ingegeven dan je kan verkopen voor item ' . $itemResult['item_name'] . '!';
                             }
                         }
                     }
+                    
+                    if ($item == 27) {
+                        $error[] = 'Eenmaal een huis gekocht kan je deze niet meer verkopen!';
+                    }
                 }            
-            } 
-
+            }
             
-            if (count($error) > 0) {
+             if (count($error) > 0) {
                 foreach ($error as $item) {
                     $form_error .= '- ' . $item . '<br />';
                 }
                 $tpl->assign('form_error', $form_error);
             } else {
                 
-                // user may sell the stuff so let him do that
+                // clan may sell the stuff so let him do that
                 foreach ($_POST as $item => $value) {
                 
                     if ($item != 'submit') {
@@ -67,33 +72,33 @@ if (isset($_GET['page']) AND !empty($_GET['page'])) {
 
                         if (!empty($value)) {
                             $sellItem = $dbCon->query('SELECT item_sell, item_count, item_attack_power, item_defence_power FROM items
-                                                       LEFT JOIN user_items ON items.item_id = user_items.item_id WHERE user_items.item_id = "' . addslashes($item) . '"
-                                                       AND user_items.user_id = "' . $userData['id'] . '"')->fetch_assoc();
-
-                            // User wants to sell it all, just delete the line...
+                                                       LEFT JOIN clan_items ON items.item_id = clan_items.item_id WHERE clan_items.item_id = "' . addslashes($item) . '"
+                                                       AND clan_items.clan_id = "' . $userData['clan_id'] . '"')->fetch_assoc();
+                            
+                            // Clan wants to sell it all, just delete the line...
                             if ($sellItem['item_count'] == $value) {
-                                $dbCon->query('DELETE FROM user_items WHERE user_id = "' . $userData['id'] . '" AND item_id = "' . addslashes($item) . '"');
+                                $dbCon->query('DELETE FROM clan_items WHERE clan_id = "' . $userData['clan_id'] . '" AND item_id = "' . addslashes($item) . '"');
                             } else {
-                                $dbCon->query('UPDATE user_items SET item_count = (item_count - "' . addslashes($value) . '") WHERE
-                                               user_id = "' . $userData['id'] . '" AND item_id = "'. addslashes($item) . '"');
+                                $dbCon->query('UPDATE clan_items SET item_count = (item_count - "' . addslashes($value) . '") WHERE
+                                               clan_id = "' . $userData['clan_id'] . '" AND item_id = "'. addslashes($item) . '"');
                             }
 
-                            // And give the user his money in cash but lower his attack / defence power
-                            $dbCon->query('UPDATE users SET cash = (cash + "' . (addslashes($value) * $sellItem['item_sell']) . '"),
+                            // And give the clan there money in cash but lower his attack / defence power
+                            $dbCon->query('UPDATE clans SET cash = (cash + "' . (addslashes($value) * $sellItem['item_sell']) . '"),
                                                             attack_power = (attack_power - "' . ($sellItem['item_attack_power'] * addslashes($value)) . '"),
-                                                            defence_power = (defence_power - "' . ($sellItem['item_defence_power'] * addslashes($value)) . '") WHERE id = "' . $userData['id'] . '"');
+                                                            defence_power = (defence_power - "' . ($sellItem['item_defence_power'] * addslashes($value)) . '") WHERE clan_id = "' . $userData['clan_id'] . '"');
 
                             $tpl->assign('success', 'De shop is dankbaar voor de verkoop! Alles is succesvol verkocht!');
                         }
                     }
                 }
             }
-        } 
+        }
         // show the sell page
             
         $userItems = array();
-        $result = $dbCon->query('SELECT * FROM user_items
-                                          LEFT JOIN items ON user_items.item_id = items.item_id WHERE user_id = "' . $userData['id'] . '" AND items.item_area BETWEEN 1 AND 4');
+        $result = $dbCon->query('SELECT * FROM clan_items
+                                          LEFT JOIN items ON clan_items.item_id = items.item_id WHERE clan_id = "' . $userData['clan_id'] . '" AND items.item_area BETWEEN 8 AND 11');
         while ($row = $result->fetch_assoc()) {
             $userItems[$row['item_id']]['id'] = $row['item_id'];
             $userItems[$row['item_id']]['name'] = $row['item_name'];
@@ -106,15 +111,13 @@ if (isset($_GET['page']) AND !empty($_GET['page'])) {
             
         $tpl->assign('items', $userItems);
     }
-    
-    // user wants to buy shit
-    if ($_GET['page'] == 'buy') {
+    elseif ($_GET['page'] == 'buy') {
         $showPage = 'buy';
         
+        $buy = array();
+        $totalCosts = 0;
+        
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $buy = array();
-            $totalCosts = 0;
-                
             foreach ($_POST as $item => $value) {
                 if ($item != 'submit') {
                      
@@ -131,14 +134,14 @@ if (isset($_GET['page']) AND !empty($_GET['page'])) {
 
                                 // Get total costs
                                 $totalitemKosts = ($value * $itemResult['item_costs']);
-
-                                if ($totalitemKosts > $userData['cash']) {
+                                $clanCash = $dbCon->query('SELECT cash FROM clans WHERE clan_id = "' . $userData['clan_id'] . '"')->fetch_assoc();
+                                if ($totalitemKosts > $clanCash['cash']) {
                                     $error[] = 'Je kan niet zoveel kopen van een ' . $itemResult['item_name'] . '!';
                                 }
 
                                 // Check if the user wants to buy to much...
                                 $totalCosts += $totalitemKosts;
-                                if ($totalCosts > $userData['cash']) {
+                                if ($totalCosts > $clanCash['cash']) {
                                     $error[] = 'Je wilt te veel kopen zoveel cash heb je niet...';
                                 }
                             }
@@ -152,7 +155,7 @@ if (isset($_GET['page']) AND !empty($_GET['page'])) {
                     $form_error .= '- ' . $item . '<br />';
                 }
                 $tpl->assign('form_error', $form_error);
-             } else {
+            } else {
                  
                  // User may buy it
                  foreach ($_POST as $item => $value) {
@@ -162,58 +165,53 @@ if (isset($_GET['page']) AND !empty($_GET['page'])) {
                             $item = str_replace('buy', '', $item);
 
                             if ($value > 0) {
-                                // Check if there is a row for the user and item if so update, if not insert
-                                $checkResult = $dbCon->query('SELECT user_id FROM user_items WHERE
-                                                              user_id = "' . $userData['id'] . '" AND item_id = "' . addslashes($item) . '"')->num_rows;
+                                // Check if there is a row for the clan and item if so update, if not insert
+                                $checkResult = $dbCon->query('SELECT clan_id FROM clan_items WHERE
+                                                              clan_id = "' . $userData['clan_id'] . '" AND item_id = "' . addslashes($item) . '"')->num_rows;
 
                                 if ($checkResult > 0) {
-                                    $dbCon->query('UPDATE user_items SET item_count = (item_count + "' . addslashes($value) . '") WHERE
-                                                   user_id = "' . $userData['id'] . '" AND item_id = "' . addslashes($item) . '"')  or die(mysqli_error($dbCon));
+                                    $dbCon->query('UPDATE clan_items SET item_count = (item_count + "' . addslashes($value) . '") WHERE
+                                                   clan_id = "' . $userData['clan_id'] . '" AND item_id = "' . addslashes($item) . '"')  or die(mysqli_error($dbCon));
                                 } else {
-                                    $dbCon->query('INSERT INTO user_items (user_id, item_id, item_count) VALUES
-                                            ("'. $userData['id'] . '", "' . addslashes($item) . '", "' . addslashes($value) . '")') or die(mysqli_error($dbCon));
+                                    $dbCon->query('INSERT INTO clan_items (clan_id, item_id, item_count) VALUES
+                                            ("'. $userData['clan_id'] . '", "' . addslashes($item) . '", "' . addslashes($value) . '")') or die(mysqli_error($dbCon));
                                 }
 
-                                // And now get the money from the user!
+                                // And now get the money from the clan!
                                 $costResult = $dbCon->query('SELECT item_costs, item_attack_power, item_defence_power FROM items WHERE item_id = "' . addslashes($item) . '"')->fetch_assoc();
                                 $costs = ($value * $costResult['item_costs']);
- 
-                                $dbCon->query('UPDATE users SET cash = (cash - "' . $costs . '"), 
+                                
+                                if (!isset($costResult['attack_power'])) { $costResult['attack_power'] = 0; }
+                                if (!isset($costResult['defence_power'])) { $costResult['defence_power'] = 0; }
+                                
+                                $dbCon->query('UPDATE clans SET cash = (cash - "' . $costs . '"), 
                                                                 attack_power = (attack_power + "' . ($costResult['attack_power'] * addslashes($value)) . '"),
-                                                                defence_power = (defence_power + "' . ($costResult['defence_power'] * addslashes($value)) . '") WHERE id = "' . $userData['id'] .'"');
+                                                                defence_power = (defence_power + "' . ($costResult['defence_power'] * addslashes($value)) . '") WHERE clan_id = "' . $userData['clan_id'] .'"');
                                 
                                 $tpl->assign('success', 'De transactie is succesvol afgerond!');
                             }
                         }
                     }
                 }
-             }
-        }
-        
-        if (!isset($_GET['id'])) {
-            $buyId = 1;
-        } else {
-            if ($_GET['id'] < 1 OR $_GET['id'] > 5) {
-                $buyId = 1;
-            } else {
-                $buyId = $_GET['id'];
             }
         }
 
         $itemArray = array();
-        $itemsResult = $dbCon->query('SELECT * FROM items WHERE item_area = "' . $buyId . '"');
+        $itemsResult = $dbCon->query('SELECT * FROM items WHERE item_area = 8 OR item_area = "' . ($userData['type'] + 8) . '"');
+        $clanCash = $dbCon->query('SELECT cash FROM clans WHERE clan_id = "' . $userData['clan_id'] . '"')->fetch_assoc();
+        
         while ($items = $itemsResult->fetch_assoc()) {
             $itemArray[$items['item_id']]['id'] = $items['item_id'];
             $itemArray[$items['item_id']]['name'] = $items['item_name'];
             $itemArray[$items['item_id']]['attack_power'] = $items['item_attack_power'];
             $itemArray[$items['item_id']]['defence_power'] = $items['item_defence_power'];
             $itemArray[$items['item_id']]['costs'] = $items['item_costs'];
-            $itemArray[$items['item_id']]['max_buy'] = floor(($userData['cash'] / $items['item_costs']));
+            $itemArray[$items['item_id']]['max_buy'] = floor(($clanCash['cash'] / $items['item_costs']));
         }
         $tpl->assign('items', $itemArray);
     }
 } else {
-    header('Location: shop.php?page=buy&id=1');
+    header('Location: shop.php?page=buy');
 }
 
-$tpl->display('ingame/shop' . $showPage . '.tpl');
+$tpl->display('clan/' . $showPage . '.tpl');

@@ -81,6 +81,13 @@
                     <ul>
                         {if $clan_id == 0}<li><a href="{$ROOT_URL}ingame/clan/index.php?page=join">Join clan</a>{/if}
                         {if $clan_id == 0}<li><a href="{$ROOT_URL}ingame/clan/index.php?page=create">Maak clan</a>{/if}
+                        <li><a href="{$ROOT_URL}ingame/clan/index.php?page=overview">Clan ovezicht</a>
+                        {if $clan_id != 0}
+                        <li><a href="{$ROOT_URL}ingame/clan/hq.php?page=members">Ledenlijst</a>
+                        {if $clan_level != 10}<li><a href="{$ROOT_URL}ingame/clan/index.php?page=leave">Clan verlaten</a>{/if}
+                        {if $clan_level > 5}<li><a href="{$ROOT_URL}ingame/clan/hq.php?page=recruits">Recruits</a>{/if}
+                        {if $clan_level == 10}<li><a href="{$ROOT_URL}ingame/clan/hq.php?page=cOwner">Owner wijzigen</a>{/if}
+                        {/if}    
                     </ul>
                 </div>
                 

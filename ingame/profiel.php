@@ -39,19 +39,20 @@ if (!isset($_GET['id']) OR empty($_GET['id'])) {
 
 $userProfile = $dbCon->query('SELECT * FROM users WHERE id = "' . addslashes($userId) . '" LIMIT 1')->fetch_assoc();
 $itemsResult = $dbCon->query('SELECT * FROM user_items LEFT JOIN items ON user_items.item_id = items.item_id WHERE user_id = "' . addslashes($userId) . '"');
-        while ($items = $itemsResult->fetch_assoc()) {
-            $itemArray[$items['item_id']]['id'] = $items['item_id'];
-            $itemArray[$items['item_id']]['name'] = $items['item_name'];
-            $itemArray[$items['item_id']]['attack_power'] = $items['item_attack_power'];
-            $itemArray[$items['item_id']]['defence_power'] = $items['item_defence_power'];
-            $itemArray[$items['item_id']]['costs'] = $items['item_costs'];
-            $itemArray[$items['item_id']]['count'] = $items['item_count'];
-            $itemArray[$items['item_id']]['total_attack_power'] = ($items['item_attack_power'] * $items['item_count']);
-            $itemArray[$items['item_id']]['total_defence_power'] = ($items['item_defence_power']  * $items['item_count']);
-        }
-        $tpl->assign('items', $itemArray);
 
+while ($items = $itemsResult->fetch_assoc()) {
+    $itemArray[$items['item_id']]['id'] = $items['item_id'];
+    $itemArray[$items['item_id']]['name'] = $items['item_name'];
+    $itemArray[$items['item_id']]['attack_power'] = $items['item_attack_power'];
+    $itemArray[$items['item_id']]['defence_power'] = $items['item_defence_power'];
+    $itemArray[$items['item_id']]['costs'] = $items['item_costs'];
+    $itemArray[$items['item_id']]['count'] = $items['item_count'];
+    $itemArray[$items['item_id']]['total_attack_power'] = ($items['item_attack_power'] * $items['item_count']);
+    $itemArray[$items['item_id']]['total_defence_power'] = ($items['item_defence_power']  * $items['item_count']);
+}
+if ($itemsResult->num_rows > 1) { 
+    $tpl->assign('items', $itemArray);
+}
+        
 $tpl->assign('user', $userProfile);
-$tpl->assign('items', $itemArray);
-
 $tpl->display('ingame/profiel.tpl');

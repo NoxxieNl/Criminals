@@ -16,7 +16,11 @@
         });
     </script>
     <p><h1>Outbox</h1></p>
-    {if isset($success)}
+    {if isset($form_error)}
+    <div class="error">
+        {$form_error}
+    </div>
+    {elseif isset($success)}
     <div class="success">
         {$success}
     </div>

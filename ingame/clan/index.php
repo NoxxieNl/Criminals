@@ -55,7 +55,7 @@ if (isset($_GET['page']) AND !empty($_GET['page'])) {
     }
     
     // User wants to create a clan
-    if ($_GET['page'] == 'create') {
+    elseif ($_GET['page'] == 'create') {
         
         // check if user is already in a clan
         if ($userData['clan_level'] > 0) {
@@ -105,7 +105,7 @@ if (isset($_GET['page']) AND !empty($_GET['page'])) {
     }
     
     // User wants to leave a clan
-    if ($_GET['page'] == 'leave') {
+    elseif ($_GET['page'] == 'leave') {
         
         // check if user is in a clan
         if ($userData['clan_level'] < 1) {
@@ -117,7 +117,7 @@ if (isset($_GET['page']) AND !empty($_GET['page'])) {
             if (isset($_GET['confirmation'])) {
                 
                 // remove user form clan
-                if ($userData['clan_level'] != 10) {
+                if ($userData['clan_level'] == 10) {
                     $error[] = 'Je kan niet uit de clan stappen als je de owner bent!';
                 } else {
                     $dbCon->query('UPDATE users SET clan_id = 0, clan_level = 0 WHERE id = "' . $userData['id'] . '"');
@@ -133,7 +133,7 @@ if (isset($_GET['page']) AND !empty($_GET['page'])) {
     }
     
     // User wants to join a clan
-    if ($_GET['page'] == 'join') {
+    elseif ($_GET['page'] == 'join') {
         $showPage = 'join';
         
         //check if user is in a clan
@@ -174,27 +174,45 @@ if (isset($_GET['page']) AND !empty($_GET['page'])) {
     }
     
     // We are going to show them the overview of the clans!
-    if ($_GET['page'] == 'overview') {
+    elseif ($_GET['page'] == 'overview') {
         $clanArray = array();
         
-        $clanResult = $dbCon->query('SELECT * FROM clans');
+        $showPage = 'overview';
+        $clanResult = $dbCon->query('SELECT * FROM clans ORDER BY clan_name');
         while ($clanRow = $clanResult->fetch_assoc()) {
             
-            $clanArray[$clanRow['clan_id']]['id'] = $clanRow['clan_id'];
+            $clanArray[$clanRow['clan_id']]['clan_id'] = $clanRow['clan_id'];
             $clanArray[$clanRow['clan_id']]['clan_name'] = $clanRow['clan_name'];
             $clanArray[$clanRow['clan_id']]['clan_member_count'] = $clanResult->num_rows;
             
             // Retrieve total power of clan with seperated clan members
-            $memberResult = $dbCon->query('SELECT attack_power, defence_power, clicks FROM users WHERE clan_id = "' . $clanRow['clan_id'] . '"');
+            $memberResult = $dbCon->query('SELECT attack_power, defence_power, clicks, clan_level, username, id FROM users WHERE clan_id = "' . $clanRow['clan_id'] . '"');
             while ($memberRow = $memberResult->fetch_assoc()) {
-                 $clanArray[$clanRow['clan_id']]['clan_power'] += ($memberRow['attack_power'] + ($memberRow['clicks'] * 5));
+                
+                 if (empty($clanArray[$clanRow['clan_id']]['clan_power'])) {
+                    $clanArray[$clanRow['clan_id']]['clan_power'] = ($memberRow['attack_power'] + ($memberRow['clicks'] * 5));
+                    $clanArray[$clanRow['clan_id']]['clan_members'] = 1;
+                 } else {
+                    $clanArray[$clanRow['clan_id']]['clan_power'] += ($memberRow['attack_power'] + ($memberRow['clicks'] * 5));
+                    $clanArray[$clanRow['clan_id']]['clan_members']++;
+                 }
+                 
+                 if ($memberRow['clan_level'] == 10) {
+
+                    $clanArray[$clanRow['clan_id']]['clan_owner'] = $memberRow['username'];
+                    $clanArray[$clanRow['clan_id']]['clan_owner_id'] = $memberRow['id'];
+                 }
             }
         }
         $tpl->assign('clanArray', $clanArray);
         
     }
+    else {
+        // no matching page found
+        header('Location: index.php?page=overview');
+    }
 } else {
-    $showPage = 'index';
+    header('Location: index.php?page=overview');
 }
 
 if (count($error) > 0) {

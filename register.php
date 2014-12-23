@@ -62,9 +62,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $tpl->assign($_POST);
         $tpl->assign('form_error', $error);
     } else {
-        $dbCon->query('INSERT INTO users (username, password, email, type)
+        $dbCon->query('INSERT INTO users (username, password, email, type, activated)
                                    VALUES ("' . addslashes($_POST['login']) . '", "' . sha1($_POST['password']) . '",
-                                           "' . addslashes($_POST['emailCheck']) . '", "' . addslashes($_POST['type']) . '")');
+                                           "' . addslashes($_POST['emailCheck']) . '", "' . addslashes($_POST['type']) . '",
+                                          1)');
         if (mysqli_error($dbCon)) {
             $sysError[] = 'Query failed...';
         } else {

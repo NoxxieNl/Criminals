@@ -68,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $tpl->assign('form_error', $form_error);
     } else {
         // We got higher or lower! :-)
-        $hluserAnswer = $_POST['hl'];
+        $hluserAnswer = addslashes($_POST['hl']);
         $hlNumerWin = rand(1,100);
       
         if ($hlNumber > $hlNumerWin) {

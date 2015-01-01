@@ -62,8 +62,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $tpl->assign($_POST);
         $tpl->assign('form_error', $error);
     } else {
+        
+        // Create safe hash for user password with blowfish algoritem
+        $userSalt = strtr(base64_encode(mcrypt_create_iv(16, MCRYPT_DEV_URANDOM)), '+', '.');
+        $userSalt = sprintf("$2a$%02d$", 10) . $userSalt;
+        
+        $userHash = crypt($_POST['password'], $userSalt);
+        
         $dbCon->query('INSERT INTO users (username, password, email, type, activated)
-                                   VALUES ("' . addslashes($_POST['login']) . '", "' . sha1($_POST['password']) . '",
+                                   VALUES ("' . addslashes($_POST['login']) . '", "' . $userHash . '",
                                            "' . addslashes($_POST['emailCheck']) . '", "' . addslashes($_POST['type']) . '",
                                           1)');
         if (mysqli_error($dbCon)) {

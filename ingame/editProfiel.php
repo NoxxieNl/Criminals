@@ -32,7 +32,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if ($_POST['pass'] !== $_POST['passVerify']) {
                 $error[] = 'Wachtwoorden komen niet overeen!';
             } else {
-                $password = sha1($_POST['pass']);
+                // Create safe hash for user password with blowfish algoritem
+                $userSalt = strtr(base64_encode(mcrypt_create_iv(16, MCRYPT_DEV_URANDOM)), '+', '.');
+                $userSalt = sprintf("$2a$%02d$", 10) . $userSalt;
+        
+                $password = crypt($_POST['pass'], $userSalt);
             }
         } else {
             $error[] = 'Je hebt geen wachtwoord ingevoerd!';

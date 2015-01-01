@@ -14,11 +14,15 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  */
 
+// Show errors even if host doenst want it...
+ini_set('display_errors', 1);
+error_reporting(-1);
+
 // load in default settings
 require_once('config.inc.php');
 
 // Init smarty class
-require_once('lib/smarty.class.php');
+require_once('lib/Smarty.class.php');
 $tpl = new Smarty();
 
 //define root path

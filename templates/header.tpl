@@ -75,7 +75,7 @@
                 </div>
                 {/if}
                 
-                {if isset($clan_id)}
+                {if isset($clan_id) AND $clan_id > 0}
                 <div id="item">
                     <div id="header">Clan</div>
                     <ul>

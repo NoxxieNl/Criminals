@@ -75,6 +75,7 @@
                 </div>
                 {/if}
                 
+                {if isset($clan_id)}
                 <div id="item">
                     <div id="header">Clan</div>
                     <ul>
@@ -90,6 +91,7 @@
                         {/if}    
                     </ul>
                 </div>
+                {/if}
                 
                 {if isset($level) AND $level > 0}
                 <div id="item">

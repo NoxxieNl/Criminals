@@ -51,6 +51,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
         $tpl->assign('form_error', $formError);
     } else {
+        
+        //Prevent email injection
+        foreach ($_POST as $data => $post) {
+            $_POST[$post] = str_replace(array('\r', '\n', '%0a', '%0d'), '', stripslashes($data));
+        }
        
         $to = ROOT_EMAIL;
         $subject = 'Sollicitatie';

@@ -130,7 +130,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `signup_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `website` varchar(200) NOT NULL,
   `info` text NOT NULL,
-  `online_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `online_time` timestamp NULL,
   `attack_power` int(11) NOT NULL,
   `defence_power` int(11) NOT NULL,
   `clicks` int(11) NOT NULL,
@@ -157,4 +157,4 @@ CREATE TABLE IF NOT EXISTS `user_items` (
   KEY `user_id` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-CREATE VIEW `onlineusers` AS select 0 AS `showonline`,count(`users`.`username`) AS `Count` from `users` where (((unix_timestamp(now()) - unix_timestamp(`users`.`online_time`)) < 300) and (`users`.`showonline` = 0)) union all select 1 AS `showonline`,count(`users`.`username`) AS `Count` from `users` where (((unix_timestamp(now()) - unix_timestamp(`users`.`online_time`)) < 300) and (`users`.`showonline` = 1)) union all select 2 AS `showonline`,count(`users`.`username`) AS `Count` from `users` where (((unix_timestamp(now()) - unix_timestamp(`users`.`online_time`)) < 300) and (`users`.`level` > 0));
+CREATE VIEW `onlineUsers` AS select 0 AS `showonline`,count(`users`.`username`) AS `Count` from `users` where (((unix_timestamp(now()) - unix_timestamp(`users`.`online_time`)) < 300) and (`users`.`showonline` = 0)) union all select 1 AS `showonline`,count(`users`.`username`) AS `Count` from `users` where (((unix_timestamp(now()) - unix_timestamp(`users`.`online_time`)) < 300) and (`users`.`showonline` = 1)) union all select 2 AS `showonline`,count(`users`.`username`) AS `Count` from `users` where (((unix_timestamp(now()) - unix_timestamp(`users`.`online_time`)) < 300) and (`users`.`level` > 0));

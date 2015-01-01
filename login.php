@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
     if ($_POST['login'] != null AND $_POST['password'] != null) {
         
-        $result = $dbCon->query('SELECT username FROM users WHERE username = "' . addslashes($_POST['login']) . '"');
+        $result = $dbCon->query('SELECT username, password FROM users WHERE username = "' . addslashes($_POST['login']) . '"');
         
         if (mysqli_error($dbCon)) {
              $sysError[] = 'Query failed...';
@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             } else {
                 // check if user hash is correct
                 $fetch = $result->fetch_assoc();
-                if (!hash_equels($fetch['password'], crypt($_POST['password'], $fetch['password']))) {
+                if (!hash_equals($fetch['password'], crypt($_POST['password'], $fetch['password']))) {
                     $formError[] = 'Gebruikersnaam of wachtwoord is incorrect.';
                 }
             }

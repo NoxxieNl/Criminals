@@ -25,7 +25,7 @@ $form_error = '';
 
 if (isset($_GET['page']) AND !empty($_GET['page'])) {
     if ($_GET['page'] == 'sell') {
-        $showPage = 'sell';
+        $showPage = 'Sell';
         
         // user has told what he want to sell, sell it!
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -109,7 +109,7 @@ if (isset($_GET['page']) AND !empty($_GET['page'])) {
     
     // user wants to buy shit
     if ($_GET['page'] == 'buy') {
-        $showPage = 'buy';
+        $showPage = 'Buy';
         
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $buy = array();

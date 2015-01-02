@@ -29,6 +29,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     elseif(!ctype_digit($_POST['money'])) {
         $error[] = 'Het ingegeven bedrag is niet numeriek.';
     }
+    // Extra check for php overflow error, so that +/- bug cant be abused
+    elseif (strlen($$_POST['money']) > 20) {
+        $error[] = 'Het bedrag wat je hebt ingevoerd is abnormaal hoog!';
+    }
     
     if (!isset($_POST['withdraw']) AND !isset($_POST['deposit'])) {
         $error[] = 'Je hebt niet aangegeven of je geld wilt opnemen of storen!';

@@ -22,3 +22,5 @@ DEFINE('SQL_DATABASE', 'blauw_2');
 
 DEFINE('ROOT_URL', 'http://localhost:8080/blauw/');
 DEFINE('ROOT_EMAIL', 'info@website.nl');
+
+DEFINE('WEBSITE_NAME', 'Criminals');

@@ -21,7 +21,7 @@ $formError = array();
 $error = '';
 
 // Check if user is loggedin, if so no need to be here...
-if (LOGGEDIN == TRUE) { header('Location: ' . BASE_DIR . 'ingame/index.php'); }
+if (LOGGEDIN == TRUE) { header('Location: ' . ROOT_URL . 'ingame/index.php'); }
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     

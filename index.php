@@ -13,10 +13,10 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  */
-
-
-// Define website root dir
 require_once('init.php');
+
+// Check if user is loggedin, if so no need to be here...
+if (LOGGEDIN == TRUE) { header('Location: ' . ROOT_URL . 'ingame/index.php'); }
 
 // Show index page
 $tpl->display('index.tpl');

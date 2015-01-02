@@ -1,0 +1,138 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<title>CSS and Jquery Tabs</title>
+<link rel="stylesheet" type="text/css" href="tabs.css" />
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript">
+
+$(document).ready(function() {
+
+	$(".tab_content").hide();
+	$(".tab_content:first").show(); 
+
+	$("ul.tabs li").click(function() {
+		$("ul.tabs li").removeClass("active");
+		$(this).addClass("active");
+		$(".tab_content").hide();
+		var activeTab = $(this).attr("rel"); 
+		$("#"+activeTab).fadeIn(); 
+	});
+});
+
+</script> 
+
+<style type="text/css">
+
+	ul.tabs {
+		margin: 0;
+		padding: 0;
+		float: left;
+		list-style: none;
+		height: 32px;
+		border-bottom: 1px solid #999999;
+		border-left: 1px solid #999999;
+		width: 100%;
+	}
+	ul.tabs li {
+		float: left;
+		margin: 0;
+		cursor: pointer;
+		padding: 0px 21px ;
+		height: 31px;
+		line-height: 31px;
+		border: 1px solid #999999;
+		border-left: none;
+		font-weight: bold;
+		background: #EEEEEE;
+		overflow: hidden;
+		position: relative;
+	}
+	ul.tabs li:hover {
+		background: #CCCCCC;
+	}	
+	ul.tabs li.active{
+		background: #FFFFFF;
+		border-bottom: 1px solid #FFFFFF;
+	}
+	.tab_container {
+		border: 1px solid #999999;
+		border-top: none;
+		clear: both;
+		float: left; 
+		width: 100%;
+		background: #FFFFFF;
+	}
+	.tab_content {
+		padding: 20px;
+		font-size: 1.2em;
+		display: none;
+	}
+	#container {
+		width: 600px;
+		margin: 0 auto;	
+	}
+</style>
+
+</head>
+
+<body>
+<div id="container">
+
+  <ul class="tabs"> 
+        <li class="active" rel="tab1"> Call of Duty</li>
+        <li rel="tab2"> Mortal Combat</li>
+        <li rel="tab3"> Halo</li>
+        <li rel="tab4"> Portal</li>
+    </ul>
+
+<div class="tab_container"> 
+
+     <div id="tab1" class="tab_content"> 
+ 
+         <p><img src="images/cod.jpg"> <br />
+         <strong>
+         Call of Duty: Black Ops bears the series' standard superbly,
+         delivering an engrossing campaign and exciting competitive multiplayer.
+         </strong>
+         </p>
+
+     </div><!-- #tab1 -->
+     <div id="tab2" class="tab_content"> 
+
+       <p><img src="images/mortal combat.jpg"> <br />
+      	<strong>
+      	Mortal Kombat returns after a lengthy hiatus and puts players
+      	back into the Tournament for 2D fighting with gruesome combat.
+      	</strong>
+       </p>
+
+     </div><!-- #tab2 -->
+     <div id="tab3" class="tab_content"> 
+
+       <p><img src="images/halo.jpg"> <br />
+      	<strong>
+      	Halo: Reach is the culmination of the superlative combat, sensational
+      	multiplayer, and seamless online integration that are the hallmarks
+      	of this superb series.
+      	</strong>
+       </p>
+
+     </div><!-- #tab3 -->
+     <div id="tab4" class="tab_content"> 
+
+       <p><img src="images/portal.jpg"> <br />
+      	<strong>
+      	Portal 2 is an action shooter game from Valve Software that draws 
+      	from the original formula of innovative gameplay, story, and music,
+      	which earned the original Portal more than 70 industry accolades.
+      	</strong>
+       </p>
+
+     </div><!-- #tab4 --> 
+     
+ </div> <!-- .tab_container --> 
+
+</div> <!-- #container -->
+</body>
+</html>

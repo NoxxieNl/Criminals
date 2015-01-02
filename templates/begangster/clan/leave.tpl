@@ -1,0 +1,31 @@
+{include '../ingame/header.tpl'}
+    <div id="centercontent" style="margin-top: 7px;">
+			
+	<div class="titel">
+            <div class="titelicoon"> <img src="{$TEMPLATE_URL}images/icons/title-icon.png" alt="icoon" title="icoon"/> </div>
+            <div class="titeltekst">Clan verlaten</div>
+        </div>
+        
+        {if isset($form_error)}
+        <div class="melding bad small icon">
+            {$form_error}
+        </div>
+        {elseif isset($success)}
+        <div class="melding good small icon">
+            {$success}
+        </div>
+        {elseif isset($confirmation)}
+        <div class="info">
+            Weet je het zeker dat je de clan wilt verlaten? Klik <a href="{$ROOT_URL}ingame/clan/index.php?page=leave&confirmation=true">hier</a> als je het zeker weet!
+        </div>
+        {/if}
+        
+        <div class="tekstvak">
+            <p>Als je de clan wilt verlaten kan je dat hier aangeven!</p>
+            <form method="post">
+                <input class="button bad large" name="submit" type="submit" value="Verlaat de clan!">
+            </form>
+        </div>		
+        <div class="titelfooter"></div>      
+    </div>
+{include '../ingame/footer.tpl'}

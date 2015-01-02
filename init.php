@@ -18,6 +18,11 @@
 ini_set('display_errors', 1);
 error_reporting(-1);
 
+// Debug mode
+DEFINE('DEBUG_MODE', TRUE);
+date_default_timezone_set("Europe/Amsterdam");
+$sysError = array();
+
 // load in default settings
 require_once('config.inc.php');
 
@@ -28,25 +33,35 @@ $tpl = new Smarty();
 //define root path
 DEFINE('BASE_DIR', dirname(__FILE__).'/');
 
-$tpl->assign('BASE_DIR', BASE_DIR);
-$tpl->assign('ROOT_URL', ROOT_URL);
-
-// Debug mode
-DEFINE('DEBUG_MODE', TRUE);
-date_default_timezone_set("Europe/Amsterdam");
-$sysError = array();
-
-// set tpl options
-$tpl->setTemplateDir(BASE_DIR . 'templates/')
-      ->setCompileDir(BASE_DIR . 'templates/templates_c/')
-      ->setCacheDir(BASE_DIR . 'cache');
-
 // Init database
 $dbCon = new mysqli(SQL_HOSTNAME, SQL_USERNAME, SQL_PASSWORD, SQL_DATABASE);
 if (mysqli_connect_error($dbCon)) {
     if (DEBUG_MODE) { $sysError[] = 'Could not connect to database. ' . mysqli_connect_errno($dbCon); }
     else { $sysError[] = 'Could not connect to database'; }
 }
+
+// Get layout used
+$layout = $dbCon->query('SELECT setting_value FROM settings WHERE setting_id = 3')->fetch_assoc();
+
+// Check if theme exist if not use default
+if (!file_exists(BASE_DIR . 'templates/' . $layout['setting_value'] . '/')) {
+    $layout['setting_value'] = 'blue';
+}
+DEFINE('TEMPLATE_DIR', BASE_DIR . 'templates/' . $layout['setting_value'] . '/');
+
+// set tpl options
+$tpl->setTemplateDir(BASE_DIR . 'templates/' . $layout['setting_value'] . '/')
+      ->setCompileDir(BASE_DIR . 'templates/templates_c/')
+      ->setCacheDir(BASE_DIR . 'cache');
+
+$tpl->assign('TEMPLATE_DIR', TEMPLATE_DIR);
+$tpl->assign('TEMPLATE_URL', ROOT_URL . 'templates/' . $layout['setting_value'] . '/');
+
+// Basic information to tpl
+$tpl->assign('BASE_DIR', BASE_DIR);
+$tpl->assign('ROOT_URL', ROOT_URL);
+$tpl->assign('WEBSITE_NAME', WEBSITE_NAME);
+
 
 // check hash_equal exist, if not php version lower then 5.6 create our own :-)
 if (!function_exists('hash_equals')) {
@@ -154,6 +169,14 @@ if (LOGGEDIN == TRUE) {
     // set user type
     $userData['typeName'] = $type[$userData['type']]['name'];
     $tpl->assign('typeName', $userData['typeName']);
+    
+    // get unread messages
+    $messageCount = $dbCon->query('SELECT message_id
+                                   FROM messages
+                                   LEFT JOIN users AS fromUser ON messages.message_from_id = fromUser.id
+                                   WHERE message_to_id = "' . $userData['id'] . '" AND message_deleted_to = 0 AND message_read = 0')->num_rows;
+    
+    $tpl->assign('unreadMessages', $messageCount);
 }
 
 // Get total players

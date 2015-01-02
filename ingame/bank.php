@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $error[] = 'Het ingegeven bedrag is niet numeriek.';
     }
     // Extra check for php overflow error, so that +/- bug cant be abused
-    elseif (strlen($$_POST['money']) > 20) {
+    elseif (strlen($_POST['money']) > 20) {
         $error[] = 'Het bedrag wat je hebt ingevoerd is abnormaal hoog!';
     }
     

@@ -44,7 +44,7 @@ if (mysqli_connect_error($dbCon)) {
 $layout = $dbCon->query('SELECT setting_value FROM settings WHERE setting_id = 3')->fetch_assoc();
 
 // Check if theme exist if not use default
-if (!file_exists(BASE_DIR . 'templates/' . $layout['setting_value'] . '/')) {
+if (!file_exists(BASE_DIR . 'templates/' . $layout['setting_value'] . '/') OR $layout['setting_value'] == '') {
     $layout['setting_value'] = 'blue';
 }
 DEFINE('TEMPLATE_DIR', BASE_DIR . 'templates/' . $layout['setting_value'] . '/');

@@ -214,8 +214,7 @@ if ($step == 2) {
         } else {
             // Write config file
             if ($file = fopen('../config.inc.php', 'r+')) {
-                $fileContent = "
-<?php
+                $fileContent = "<?php
 /*
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by

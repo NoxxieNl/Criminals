@@ -49,3 +49,4 @@ nbactions.xml
 
 # Textmate
 *.tmproj 
+/templates/templates_c/

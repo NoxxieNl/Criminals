@@ -16,7 +16,7 @@
 
 require_once('../init.php');
 $error = array();
-
+$form_error = '';
 
 // Check if user is loggedin, if so no need to be here...
 if (LOGGEDIN == FALSE) { header('Location: ' . ROOT_URL . 'index.php'); }

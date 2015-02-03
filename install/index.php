@@ -409,7 +409,7 @@ DEFINE('WEBSITE_NAME', '%name%');";
                                     `attacks_won` int(11) NOT NULL DEFAULT '0',
                                     `attacks_lost` int(11) NOT NULL DEFAULT '0',
                                     `bank_left` int(1) NOT NULL DEFAULT '5',
-                                    `country_id` int(1) NOT NULL DEFAULT '1'
+                                    `country_id` int(1) NOT NULL DEFAULT '1',
                                     PRIMARY KEY (`id`),
                                     UNIQUE KEY `user_id` (`id`)
                                 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;");

@@ -15,12 +15,12 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  */
 
-DEFINE('SQL_HOSTNAME', 'localhost');
-DEFINE('SQL_USERNAME', 'root');
-DEFINE('SQL_PASSWORD', 'usbw');
-DEFINE('SQL_DATABASE', 'blauw_2');
+DEFINE('SQL_HOSTNAME', 'localhost'); // host, most of the time localhost
+DEFINE('SQL_USERNAME', ''); // put username of the database here
+DEFINE('SQL_PASSWORD', ''); // put password of the database here
+DEFINE('SQL_DATABASE', ''); // put the databasen name here
 
-DEFINE('ROOT_URL', 'http://localhost:8080/blauw/');
-DEFINE('ROOT_EMAIL', 'info@website.nl');
+DEFINE('ROOT_URL', ''); // write the url of your website here
+DEFINE('ROOT_EMAIL', ''); //write the email here
 
-DEFINE('WEBSITE_NAME', 'Criminals');
+DEFINE('WEBSITE_NAME', ''); //set the name here

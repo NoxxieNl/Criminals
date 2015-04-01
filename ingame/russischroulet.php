@@ -21,7 +21,9 @@ if (LOGGEDIN == FALSE) { header('Location: ' . ROOT_URL . 'index.php'); }
 $winningMoney = 500;
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $shot = (int) rand(0,1);
+  
+    // Chance variable  
+    $shot = (int) rand(0,1); 
         
     // user won
     if ($shot == 1) {

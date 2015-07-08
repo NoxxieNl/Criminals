@@ -23,4 +23,4 @@ DEFINE('SQL_DATABASE', ''); // put the databasen name here
 DEFINE('ROOT_URL', ''); // write the url of your website here
 DEFINE('ROOT_EMAIL', ''); //write the email here
 
-DEFINE('WEBSITE_NAME', ''); //set the name here
+DEFINE('WEBSITE_NAME', 'Criminals'); //set the name here

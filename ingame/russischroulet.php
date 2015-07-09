@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($shot == 1) {
         $dbCon->query('UPDATE users SET cash = (cash + ' . $winningMoney . ') WHERE session_id = "' . $userData['session_id'] . '"');
             
-        $tpl->assign('success', 'Je haalt de trekket over en de magnum klikt, je hebt het overleeft en wint ' . $winningMoney . '!');
+        $tpl->assign('success', 'Je haalt de trekker over en de magnum klikt, je hebt het overleeft en wint ' . $winningMoney . '!');
     } else {
         //user did not win
         $dbCon->query('UPDATE users SET cash = (cash - ' . $winningMoney . ') WHERE session_id = "' . $userData['session_id'] . '"');

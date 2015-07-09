@@ -20,4 +20,4 @@ $result = $dbCon->query('SELECT setting_value FROM settings WHERE setting_name =
 $row = $result->fetch_assoc();
 
 $tpl->assign('rules', $row['setting_value']);
-$tpl->display('wetboek.tpl');
+$tpl->display('rules.tpl');

@@ -1,4 +1,5 @@
 <?php
+
 /*
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -16,12 +17,10 @@
 
 DEFINE('SQL_HOSTNAME', 'localhost');
 DEFINE('SQL_USERNAME', 'root');
-DEFINE('SQL_PASSWORD', '');
-DEFINE('SQL_DATABASE', 'Game');
+DEFINE('SQL_PASSWORD', 'usbw');
+DEFINE('SQL_DATABASE', 'blauw_2');
 
-DEFINE('ROOT_URL', 'http://localhost:8080/');
-DEFINE('ROOT_EMAIL', 'test@test.nl');
+DEFINE('ROOT_URL', 'http://localhost:8080/blauw/');
+DEFINE('ROOT_EMAIL', 'info@website.nl');
 
-DEFINE('WEBSITE_NAME', 'Test');
-
-
+DEFINE('WEBSITE_NAME', 'Criminals');

@@ -133,21 +133,16 @@ if (isset($_COOKIE['game_session_id'])) {
 }
 
 // Rank array
-$rank = array(
-    array('Name' => 'Zwerver', 'power_low' => 0, 'power_high' => 100),
-    array('Name' => 'Bedelaar', 'power_low' => 100, 'power_high' => 700),
-    array('Name' => 'Crimineel', 'power_low' => 700, 'power_high' => 1300),
-    array('Name' => 'Zakkenroller', 'power_low' => 1300, 'power_high' => 2000),
-    array('Name' => 'Tuig', 'power_low' => 2000, 'power_high' => 2800),
-    array('Name' => 'Geweldadig', 'power_low' => 2800, 'power_high' => 3700),
-    array('Name' => 'Autodief', 'power_low' => 3700, 'power_high' => 4700),
-    array('Name' => 'Drugsdealer', 'power_low' => 4700, 'power_high' => 5800),
-    array('Name' => 'Gangster', 'power_low' => 5800, 'power_high' => 6000),
-    array('Name' => 'Overvaller', 'power_low' => 6000, 'power_high' => 7300),
-    array('Name' => 'Bendeleider', 'power_low' => 7300, 'power_high' => 1000),
-    array('Name' => 'Godfather', 'power_low' => 10000, 'power_high' => 999999999)
-);
-$tpl->assign('ranks', $rank);
+
+$rank = $dbCon->query("SELECT * FROM ranks");
+$rankArray = $rank->fetch_array();
+
+
+  $tpl->assign('ranks', $rankArray);  
+
+
+
+
 
 // Type array
 $type = array(
@@ -156,13 +151,20 @@ $type = array(
     array('id' => 2, 'name' => 'Wetenschapper'),
     array('id' => 3, 'name' => 'Politie')
 );
+print_r($rankArray['id']);
 $tpl->assign('type', $type);
 // get Current rank & type of user if user is logged in
 if (LOGGEDIN == TRUE) {
     foreach ($rank as $item) {
         if ($userData['attack_power'] >= $item['power_low'] && $userData['attack_power'] < $item['power_high']) {
-            $userData['rank'] = $item['Name'];
-            $tpl->assign('rank', $userData['rank']);
+        var_dump($item->end());
+            if($item['power_high']->end() >= $userData['attack_power']){
+                $userData['rank'] = $item['rank']->end();
+            }else {
+                $userData['rank'] = $item['name'];
+            
+            }
+                $tpl->assign('rank', $userData['rank']);
         }
     }
   

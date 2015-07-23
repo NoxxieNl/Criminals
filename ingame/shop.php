@@ -180,7 +180,7 @@ if (isset($_GET['page']) AND !empty($_GET['page'])) {
  
                                 $dbCon->query('UPDATE users SET cash = (cash - "' . $costs . '"), 
                                                                 attack_power = (attack_power + "' . ($costResult['attack_power'] * addslashes($value)) . '"),
-                                                                defence_power = (defence_power + "' . ($costResult['defence_power'] * addslashes($value)) . '") WHERE id = "' . $userData['id'] .'"');
+                                                                defence_power = (defence_power + "' . ($costResult['item_defence_power'] * addslashes($value)) . '") WHERE id = "' . $userData['id'] .'"');
                                 
                                 $tpl->assign('success', 'De transactie is succesvol afgerond!');
                             }

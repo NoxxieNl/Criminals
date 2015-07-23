@@ -49,3 +49,4 @@ nbactions.xml
 
 # Textmate
 *.tmproj 
+config.inc.php

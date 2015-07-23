@@ -137,12 +137,9 @@ if (isset($_COOKIE['game_session_id'])) {
 $rank = $dbCon->query("SELECT * FROM ranks");
 $rankArray = $rank->fetch_array();
 
+$rankLast = $dbCon->query("SELECT * FROM ranks ORDER BY id DESC LIMIT 1")->fetch_array();
 
-  $tpl->assign('ranks', $rankArray);  
-
-
-
-
+  $tpl->assign('ranks', $rankArray && $rankLast);  
 
 // Type array
 $type = array(
@@ -151,20 +148,20 @@ $type = array(
     array('id' => 2, 'name' => 'Wetenschapper'),
     array('id' => 3, 'name' => 'Politie')
 );
-print_r($rankArray['id']);
 $tpl->assign('type', $type);
 // get Current rank & type of user if user is logged in
 if (LOGGEDIN == TRUE) {
     foreach ($rank as $item) {
-        if ($userData['attack_power'] >= $item['power_low'] && $userData['attack_power'] < $item['power_high']) {
-        var_dump($item->end());
-            if($item['power_high']->end() >= $userData['attack_power']){
-                $userData['rank'] = $item['rank']->end();
-            }else {
-                $userData['rank'] = $item['name'];
-            
-            }
-                $tpl->assign('rank', $userData['rank']);
+ //       var_dump($rankLast->fetch_row());
+        if ($userData['attack_power'] >= $item['power_low'] && $userData['attack_power'] < $item['power_high']) 
+        {      
+            $userData['rank'] = $item['name'];
+            $tpl->assign('rank', $userData['rank']);
+        
+        }
+        elseif($userData['attack_power'] > $rankLast['power_high']) //compare current attack_power with the highest rank, if reached above highest rank, turned back into the last rank.
+        {
+            $tpl->assign('rank',$rankLast['name']);
         }
     }
   

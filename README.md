@@ -95,4 +95,4 @@ And a basic template file you can use:
 ```
 
 Special thanks to:
-Ferhat Remory & Frenzo Brouwer(gave the rights of the Begangster layout
+Ferhat Remory & Frenzo Brouwer(gave the rights of the Begangster layout)

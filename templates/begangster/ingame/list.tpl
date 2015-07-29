@@ -26,6 +26,7 @@
                     <td class="coll"><a href="{$ROOT_URL}ingame/list.php?order=power">Power:</a></td>
                     <td class="coll">Aanvallen:</td>
                     <td class="coll">Bericht:</td>
+                    <td class="coll"> </td>
                 </tr>
 
                 {foreach from=$list item=item}
@@ -39,6 +40,7 @@
                                      {elseif $username == $item['username']}Niet mogelijk
                                      {else}<a href="{$ROOT_URL}ingame/attack.php?id={$item['id']}">Aanvallen</a>{/if}</td>
                     <td class="coll">{if $username == $item['username']}Niet mogelijk{else}<a href="{$ROOT_URL}ingame/message.php?page=new&id={$item['id']}">Verstuur bericht</a>{/if}</td>
+                    <td class="coll"><a href="{$ROOT_URL}ingame/profiel.php?id={$item['id']}">x</a></td>
                 </tr>
                 {/foreach}
 

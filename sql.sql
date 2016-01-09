@@ -159,3 +159,24 @@ CREATE TABLE IF NOT EXISTS `user_items` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 CREATE VIEW `onlineUsers` AS select 0 AS `showonline`,count(`users`.`username`) AS `Count` from `users` where (((unix_timestamp(now()) - unix_timestamp(`users`.`online_time`)) < 300) and (`users`.`showonline` = 0)) union all select 1 AS `showonline`,count(`users`.`username`) AS `Count` from `users` where (((unix_timestamp(now()) - unix_timestamp(`users`.`online_time`)) < 300) and (`users`.`showonline` = 1)) union all select 2 AS `showonline`,count(`users`.`username`) AS `Count` from `users` where (((unix_timestamp(now()) - unix_timestamp(`users`.`online_time`)) < 300) and (`users`.`level` > 0));
+
+CREATE TABLE IF NOT EXISTS `ranks` (
+ `id` int(10) NOT NULL,
+ `name` varchar(40) NOT NULL,
+ `power_low` int(11) NOT NULL,
+ `power_high` int(11) NOT NULL,
+ KEY `id` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+INSERT INTO `ranks` (`id`, `name`, `power_low`, `power_high`) VALUES
+(1, 'Zwerver', 0, 100),
+(2, 'Bedelaar', 100, 700),
+(3, 'Crimineel', 700, 1300),
+(4, 'Zakkenroller', 1300, 2000),
+(5, 'Tuig', 2000, 2800),
+(6, 'Geweldadig', 2800, 3700),
+(7, 'Autodief', 3700, 4700),
+(8, 'Drugsdealer', 4700, 5800),
+(9, 'Gangster', 5800, 7000),
+(10, 'Overvaller', 7000, 8800),
+(11, 'Bendeleider', 8800, 12000),
+(12, 'Godfather', 12000, 999999999);

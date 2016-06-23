@@ -7,7 +7,6 @@ The programming is <b>NOT</b> intended to be the newest and the most advanced pr
 As a few people said:
 > The programming is easy to read and joyfull to read, because of its simplicity.  The programming is a good way to get into the programming world and learn in the right way.
 
-This text you see here is *actually* written in Markdown! To get a feel for Markdown's syntax, type some text into the left window and watch the results in the right.
 
 ### Version
 Currently we are still running a <b>stable</b> beta version, but this will change in time.

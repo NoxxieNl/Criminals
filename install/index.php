@@ -95,6 +95,8 @@ if ($step == 1) {
     }
     
     // Check if config.inc.php file exists if so if it writeable
+    $outputAnswer['config_created'] = false;
+    
     if (!file_exists('../config.inc.php')) {
         if (!fopen('../config.inc.php', 'w')) {
             $outputAnswer['config_created'] = true;
@@ -365,13 +367,13 @@ DEFINE('WEBSITE_NAME', '%name%');";
                                     `setting_extra` varchar(200) NOT NULL,
                                     PRIMARY KEY (`setting_id`)
                                 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
-
+            
             // fill the settings table
-            mysqli_query($checkCon, "INSERT INTO `settings` (`setting_id`, `setting_name`, `setting_value`, `setting_extra`) VALUES
-                                        (1, 'rules', 'Om het zo eerlijk en gezellig te houden,zijn er enkele regels waaraan de spelers zich moeten houden,<br>\r\n 	als ze dit niet doen krijgen ze de nodige straf.<br>\r\n	<br>\r\n	<br>\r\n	Dit zijn de regels:<br>\r\n	# Spammen is niet toegestaan.<br>\r\n	# Er wordt niet gedreigd.<br>\r\n	# Mensen met hetzelfde IP worden gereset behalve als hij/zij een verklaarbare reden heeft. (Zeg dit dan direct tegen een Admin, het is je eigen fout als je het niet doet)<br>\r\n	# Het gebruik van proxies, bots, etc. is verboden.<br>\r\n	# Het is niet toegestaan meerdere accounts te hebben om ermee te cheaten. (als wij dit zien word je verwijderd zonder pardon)<br>\r\n	# Scheld geen mensen uit via een sms.<br>\r\n	<br>\r\n	<br>\r\n	Als je wordt betrapt op overtreding van een van regels overleggen de admins wat voor straf je krijgt.<br>\r\n	<br>\r\n	Denk jij dat iemand cheat?<br>\r\n	Stuur dan een berichtje naar een admin en als die persoon inderdaad cheat, dan krijg je een beloning van 10.000! ', ''),
-                                        (2, 'price', '<strong>1ste   prijs : 2500 Dl''s + Criminal wargame<br></strong>\r\n	2de    prijs : 1500 Dl''s + Dealer Wargame<br>\r\n	3de    Prijs : 1000 Dl''s + 3de wereld oorlog wargame<br>\r\n	Troost Prijs : 750 Dl''s + exofusion Wargame<br>\r\n	<br>\r\n	<strong>( De Troost Prijs gaat naar een willekeurig account )<br></strong>\r\n	Je moet wel een Dutchleader account hebben om de prijzen te winnen.<br>\r\n	Heb je geen dutchleader account maak er dan een aan op www.dutchleader.com<br>\r\n	<strong>Admins doen niet mee!</strong>', ''),
-                                        (3, 'layout', 'begangster', ''),
-                                        (4, 'country', {\"1\":\"Belgie\",\"2\":\"Duitsland\",\"3\":\"Engeland\",\"4\":\"Frankrijk\",\"5\":\"Italie\",\"6\":\"Nederland\",\"7\":\"Zweden\"}', '');");
+            mysqli_query($checkCon, 'INSERT INTO `settings` (`setting_id`, `setting_name`, `setting_value`, `setting_extra`) VALUES
+                                        (1, "rules", "Om het zo eerlijk en gezellig te houden,zijn er enkele regels waaraan de spelers zich moeten houden,<br>rn 	als ze dit niet doen krijgen ze de nodige straf.<br>rn	<br>rn	<br>rn	Dit zijn de regels:<br>rn	# Spammen is niet toegestaan.<br>rn	# Er wordt niet gedreigd.<br>rn	# Mensen met hetzelfde IP worden gereset behalve als hij/zij een verklaarbare reden heeft. (Zeg dit dan direct tegen een Admin, het is je eigen fout als je het niet doet)<br>rn	# Het gebruik van proxies, bots, etc. is verboden.<br>rn	# Het is niet toegestaan meerdere accounts te hebben om ermee te cheaten. (als wij dit zien word je verwijderd zonder pardon)<br>rn	# Scheld geen mensen uit via een sms.<br>rn	<br>rn	<br>rn	Als je wordt betrapt op overtreding van een van regels overleggen de admins wat voor straf je krijgt.<br>rn	<br>rn	Denk jij dat iemand cheat?<br>rn	Stuur dan een berichtje naar een admin en als die persoon inderdaad cheat, dan krijg je een beloning van 10.000! ", ""),
+                                        (2, "price", "<strong>1ste   prijs : 2500 Dl""s + Criminal wargame<br></strong>rn	2de    prijs : 1500 Dl""s + Dealer Wargame<br>rn	3de    Prijs : 1000 Dl""s + 3de wereld oorlog wargame<br>rn	Troost Prijs : 750 Dl""s + exofusion Wargame<br>rn	<br>rn	<strong>( De Troost Prijs gaat naar een willekeurig account )<br></strong>rn	Je moet wel een Dutchleader account hebben om de prijzen te winnen.<br>rn	Heb je geen dutchleader account maak er dan een aan op www.dutchleader.com<br>rn	<strong>Admins doen niet mee!</strong>", ""),
+                                        (3, "layout", "begangster", ""),
+                                        (4, "country", "{\"1\":\"Belgie\",\"2\":\"Duitsland\",\"3\":\"Engeland\",\"4\":\"Frankrijk\",\"5\":\"Italie\",\"6\":\"Nederland\",\"7\":\"Zweden\"}", "");');
             
             // temp table
             mysqli_query($checkCon, "CREATE TABLE IF NOT EXISTS `temp` (

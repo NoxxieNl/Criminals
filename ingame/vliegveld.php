@@ -16,6 +16,9 @@
 
 require_once('../init.php');
 
+// Check if user is loggedin, if so no need to be here...
+if (LOGGEDIN == FALSE) { header('Location: ' . ROOT_URL . 'index.php'); }
+
 $error = array();
 $form_error = '';
 
@@ -24,9 +27,6 @@ $countryArray = json_decode($country['setting_value'], true);
 
 $tpl->assign('countryArray', $countryArray);
 $tpl->assign('currentCountry', $countryArray[$userData['country_id']]);
-
-// Check if user is loggedin, if so no need to be here...
-if (LOGGEDIN == FALSE) { header('Location: ' . ROOT_URL . 'index.php'); }
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	if($userData['cash'] < 250) {

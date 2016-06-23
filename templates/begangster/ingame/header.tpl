@@ -94,7 +94,7 @@
 	    		<ul>
 			    <li><a href="{$ROOT_URL}{if $LOGGEDIN == TRUE}ingame/{/if}index.php">Home</a></li>
                             <li><a href="{$ROOT_URL}stats.php">Statistieken</a></li>
-                            <li><a href="{$ROOT_URL}wetboek.php">Wetboek</a></li>
+                            <li><a href="{$ROOT_URL}rules.php">Wetboek</a></li>
                             <li><a href="{$ROOT_URL}prijzen.php">Prijzen</a></li>
                             {if $LOGGEDIN == TRUE}<li><a href="{$ROOT_URL}ingame/list.php">Ledenlijst</a>{/if}
 			</ul>

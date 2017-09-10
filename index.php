@@ -13,6 +13,14 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  */
+ 
+ // check if installation folder is still availible
+if (file_exists('install/index.php')) {
+	header('Location: install/');
+	exit();
+}
+
+// launch index
 require_once('init.php');
 
 // Check if user is loggedin, if so no need to be here...

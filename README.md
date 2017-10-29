@@ -92,6 +92,3 @@ And a basic template file you can use:
     <p>Your html code</p>
 {include 'footer.tpl'}
 ```
-
-Special thanks to:
-Ferhat Remory & Frenzo Brouwer(gave the rights of the Begangster layout)

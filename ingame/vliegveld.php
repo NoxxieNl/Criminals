@@ -22,15 +22,36 @@ if (LOGGEDIN == FALSE) { header('Location: ' . ROOT_URL . 'index.php'); }
 $error = array();
 $form_error = '';
 
+// Verkrijg alle landen welke in de config staan
 $country = $dbCon->query('SELECT setting_value FROM settings WHERE setting_id = 4 LIMIT 1')->fetch_assoc();
 $countryArray = json_decode($country['setting_value'], true);
 
+// Haal gebouw informatie op + eigenaar
+$building = $dbCon->query(' SELECT
+                                buildings.building_name,
+                                buildings.building_config,
+                                users.username
+                            FROM
+                                buildings
+                            LEFT JOIN users ON buildings.building_owner_id = users.id
+                            WHERE
+                                buildings.building_land_id = ' . addslashes($userData['country_id']))->fetch_assoc();
+$buildingConfig = json_decode($building['building_config'], true);
+
+
+// Voeg deze toe aan template parser
 $tpl->assign('countryArray', $countryArray);
 $tpl->assign('currentCountry', $countryArray[$userData['country_id']]);
 
+// Voeg variabel data toe over gebouw
+$tpl->assign('building_costs', $buildingConfig['costs']);
+$tpl->assign('building_owner', $building['username']);
+
+print_r($buildingConfig);
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-	if($userData['cash'] < 250) {
-		$error[] = 'Een ticket kost &euro; 250,- cash';
+	if($userData['cash'] < (int) $buildingConfig['costs']) {
+		$error[] = 'Een ticket kost &euro; ' . $buildingConfig['costs'] . ' cash';
 	}
 	if(empty($_POST['country']) OR !isset($_POST['country'])) {
 		$error[] = 'Selecteer een land om waar je heen wilt vliegen.';
@@ -52,13 +73,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $result = $dbCon->query(' UPDATE
                                         users
                                     SET
-                                        cash = (cash - 250),
+                                        cash = (cash - ' . (int)  $buildingConfig['costs'] . '),
                                         country_id = "' . addslashes($_POST['country']). '"
                                     WHERE
                                         id= "'. $userData['id']. '"');
         
         $tpl->assign('currentCountry', $countryArray[$_POST['country']]);
-        $tpl->assign('success', 'Je betaald 250 en bent nu in '. $countryArray[$_POST['country']] .'!');
+        $tpl->assign('success', 'Je betaalde ' . $buildingConfig['costs'] . ' en bent nu in '. $countryArray[$_POST['country']] .'!');
     }
 }
 $tpl->display('ingame/vliegveld.tpl');

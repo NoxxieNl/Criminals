@@ -24,9 +24,10 @@
             <p>
                 Welkom bij het vliegveld.<br />
                 Selecteer hieronder een land waarheen je naartoe wilt reizen.<br /> <br />
+
+                De directeur van dit vliegveld is <strong>{$building_owner}</strong> en om van dit vliegveld te kunnen vliegen betaal je {$building_costs}! <br /> <br />
                 
                 Je bent nu in <b>{$currentCountry}</b>! <br />
-                <em>Je betaald 250,- per vlucht.</em>
             </p>
             <form method="post" action="">
                 <fieldset>

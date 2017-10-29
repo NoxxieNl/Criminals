@@ -417,12 +417,21 @@ DEFINE('WEBSITE_NAME', '%name%');";
                                 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;");
 
             // user items table
+            mysqli_query($checkCon, "CREATE TABLE `buildings` (
+                                    `building_id` int(11) NOT NULL AUTO_INCREMENT,
+                                    `building_land_id` int(11) NOT NULL,
+                                    `building_name` varchar(200) NOT NULL,
+                                    `building_owner_id` int(11) NOT NULL,
+                                    `building_config` varchar(255) NOT NULL
+                                    ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=8;");
+
+            // buildings table
             mysqli_query($checkCon, "CREATE TABLE IF NOT EXISTS `user_items` (
-                                    `user_id` int(11) NOT NULL,
-                                    `item_id` int(11) NOT NULL,
-                                    `item_count` int(11) NOT NULL,
-                                    KEY `user_id` (`user_id`)
-                                ) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
+                `user_id` int(11) NOT NULL,
+                `item_id` int(11) NOT NULL,
+                `item_count` int(11) NOT NULL,
+                KEY `user_id` (`user_id`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
             
             //Create ranks
            	mysqli_query($checkCon, "CREATE TABLE IF NOT EXISTS `ranks` (
@@ -446,7 +455,16 @@ DEFINE('WEBSITE_NAME', '%name%');";
 									(9, 'Gangster', 5800, 7000),
 									(10, 'Overvaller', 7000, 8800),
 									(11, 'Bendeleider', 8800, 12000),
-									(12, 'Godfather', 12000, 999999999);");
+                                    (12, 'Godfather', 12000, 999999999);");
+                                    
+            mysqli_query($checkCon, "INSERT INTO `buildings` (`building_id`, `building_land_id`, `building_name`, `building_owner_id`, `building_config`) VALUES
+                                    (1, 6, 'Vliegveld', 1, '{\"costs\":2000}'),
+                                    (2, 1, 'Vliegveld', 1, '{\"costs\":2000}'),
+                                    (3, 2, 'Vliegveld', 1, '{\"costs\":2000}'),
+                                    (4, 3, 'Vliegveld', 1, '{\"costs\":2000}'),
+                                    (5, 4, 'Vliegveld', 1, '{\"costs\":2000}'),
+                                    (6, 5, 'Vliegveld', 1, '{\"costs\":2000}'),
+                                    (7, 2, 'Vliegveld', 7, '{\"costs\":2000}');");
             
             // Create onlineusers view
             mysqli_query($checkCon, "CREATE VIEW `onlineUsers` AS select 0 AS `showonline`,count(`users`.`username`) AS `Count` from `users` where (((unix_timestamp(now()) - unix_timestamp(`users`.`online_time`)) < 300) and (`users`.`showonline` = 0)) union all select 1 AS `showonline`,count(`users`.`username`) AS `Count` from `users` where (((unix_timestamp(now()) - unix_timestamp(`users`.`online_time`)) < 300) and (`users`.`showonline` = 1)) union all select 2 AS `showonline`,count(`users`.`username`) AS `Count` from `users` where (((unix_timestamp(now()) - unix_timestamp(`users`.`online_time`)) < 300) and (`users`.`level` > 0));");

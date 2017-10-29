@@ -30,6 +30,8 @@ $countryArray = json_decode($country['setting_value'], true);
 $building = $dbCon->query(' SELECT
                                 buildings.building_name,
                                 buildings.building_config,
+                                buildings.building_owner_id,
+                                buildings.building_id,
                                 users.username
                             FROM
                                 buildings
@@ -47,39 +49,76 @@ $tpl->assign('currentCountry', $countryArray[$userData['country_id']]);
 $tpl->assign('building_costs', $buildingConfig['costs']);
 $tpl->assign('building_owner', $building['username']);
 
-print_r($buildingConfig);
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-	if($userData['cash'] < (int) $buildingConfig['costs']) {
-		$error[] = 'Een ticket kost &euro; ' . $buildingConfig['costs'] . ' cash';
-	}
-	if(empty($_POST['country']) OR !isset($_POST['country'])) {
-		$error[] = 'Selecteer een land om waar je heen wilt vliegen.';
-	} else {
-		if(!isset($countryArray[$_POST['country']])) {
-			$error[] = 'Dit land bestaat niet!';
-		} else {
-			if($userData['country_id'] == $_POST['country']) {
-				$error[] = 'Je bent al in ' . $countryArray[$_POST['country']] . '!';
-			}
-		}
-	}
+
+    if (isset($_POST['country_change'])) {
+        if($userData['cash'] < (int) $buildingConfig['costs']) {
+            $error[] = 'Een ticket kost &euro; ' . $buildingConfig['costs'] . ' cash';
+        }
+        if(empty($_POST['country']) OR !isset($_POST['country'])) {
+            $error[] = 'Selecteer een land om waar je heen wilt vliegen.';
+        } else {
+            if(!isset($countryArray[$_POST['country']])) {
+                $error[] = 'Dit land bestaat niet!';
+            } else {
+                if($userData['country_id'] == $_POST['country']) {
+                    $error[] = 'Je bent al in ' . $countryArray[$_POST['country']] . '!';
+                }
+            }
+        }
+    }
+
+    if (isset($_POST['building_change'])) {
+        if (empty($_POST['building_costs']) OR !isset($_POST['building_costs'])) {
+            $error[] = 'Je hebt geen ticket prijs opgegeven!';
+        }
+
+        if ($userData['id'] != $building['building_owner_id']) {
+            $error[] = 'Je kan de ticket prijs niet wijzigen, je bent geen eigenaar!';
+        }
+
+        if ($_POST['building_costs'] < 0) {
+            $error[] = 'Je kan de ticket prijs niet negatief maken!';
+        }
+    }
 	if (count($error) > 0) {
         foreach ($error as $item) {
             $form_error .= '- ' . $item . '<br />';
         }
         $tpl->assign('form_error', $form_error);
     } else {
-        $result = $dbCon->query(' UPDATE
-                                        users
-                                    SET
-                                        cash = (cash - ' . (int)  $buildingConfig['costs'] . '),
-                                        country_id = "' . addslashes($_POST['country']). '"
-                                    WHERE
-                                        id= "'. $userData['id']. '"');
-        
-        $tpl->assign('currentCountry', $countryArray[$_POST['country']]);
-        $tpl->assign('success', 'Je betaalde ' . $buildingConfig['costs'] . ' en bent nu in '. $countryArray[$_POST['country']] .'!');
+        if (isset($_POST['country_change'])) {
+            $result = $dbCon->query(' UPDATE
+                                            users
+                                        SET
+                                            cash = (cash - ' . (int)  $buildingConfig['costs'] . '),
+                                            country_id = "' . addslashes($_POST['country']) . '"
+                                        WHERE
+                                            id= "'. $userData['id'] . '"');
+
+            // En geef de eigenaar van deze building zijn verdiende geld
+            $result = $dbCon->query(' UPDATE
+                                            users
+                                        SET
+                                            bank = (bank + ' . (int)  $buildingConfig['costs'] . ')
+                                        WHERE
+                                            id = "'. $buildingConfig['building_owner_id'] . '"');
+            
+            $tpl->assign('currentCountry', $countryArray[$_POST['country']]);
+            $tpl->assign('success', 'Je betaalde ' . $buildingConfig['costs'] . ' en bent nu in '. $countryArray[$_POST['country']] .'!');
+        }
+
+        if (isset($_POST['building_change'])) {
+
+            // Update kosten voor gebouw
+            $buildingConfig['costs'] = (int) $_POST['building_costs'];
+            $result = $dbCon->query('UPDATE buildings SET building_config = "' . addslashes(json_encode($buildingConfig, true)) . '" WHERE building_id = ' . $building['building_id']);
+            
+            // Update reis bedrag
+            $tpl->assign('building_costs', $buildingConfig['costs']);
+            $tpl->assign('success', 'Je hebt de ticket prijs verhoogt naar ' . $buildingConfig['costs'] . '!');
+        }
     }
 }
 $tpl->display('ingame/vliegveld.tpl');

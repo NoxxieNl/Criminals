@@ -20,6 +20,22 @@
         </div>
         {/if}
         
+        
+        <div class="tekstvak">
+            Je bent eigenaar van dit vliegveld! <br />
+            Je kan de prijs aanpassen zodat men meer of juist minder hoeft te betalen voor een ticket. <br /> <br />
+
+            Mocht je dit willen doen wijzig je hieronder het bedrag voor een ticket.
+
+            <form method="post" action="">
+                <fieldset>
+                    <label>Ticket prijs:</label>
+                    <input class="normal" name="building_costs" type="text" value="{$building_costs}">
+                </fieldset>
+                <input class="button small good" name="building_change" type="submit" value="Wijzig prijs!">
+            </form>
+        </div>
+        <hr>
         <div class="tekstvak">
             <p>
                 Welkom bij het vliegveld.<br />
@@ -39,7 +55,7 @@
                             {/foreach}
                         </select>
                 </fieldset>
-                <input class="button small good" name="submit" type="submit" value="Vliegen!">
+                <input class="button small good" name="country_change" type="submit" value="Vliegen!">
             </form>
         </div>      
         <div class="titelfooter"></div>      

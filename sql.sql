@@ -180,3 +180,29 @@ INSERT INTO `ranks` (`id`, `name`, `power_low`, `power_high`) VALUES
 (10, 'Overvaller', 7000, 8800),
 (11, 'Bendeleider', 8800, 12000),
 (12, 'Godfather', 12000, 999999999);
+
+CREATE TABLE `buildings` (
+  `building_id` int(11) NOT NULL,
+  `building_land_id` int(11) NOT NULL,
+  `building_name` varchar(200) NOT NULL,
+  `building_owner_id` int(11) NOT NULL,
+  `building_config` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+INSERT INTO `buildings` (`building_id`, `building_land_id`, `building_name`, `building_owner_id`, `building_config`) VALUES
+(1, 6, 'Vliegveld', 1, '{\"costs\":2000}'),
+(2, 1, 'Vliegveld', 1, '{\"costs\":2000}'),
+(3, 2, 'Vliegveld', 1, '{\"costs\":2000}'),
+(4, 3, 'Vliegveld', 1, '{\"costs\":2000}'),
+(5, 4, 'Vliegveld', 1, '{\"costs\":2000}'),
+(6, 5, 'Vliegveld', 1, '{\"costs\":2000}'),
+(7, 2, 'Vliegveld', 7, '{\"costs\":2000}');
+
+--
+ALTER TABLE `buildings`
+  ADD PRIMARY KEY (`building_id`),
+  ADD UNIQUE KEY `building_id` (`building_id`);
+
+--
+ALTER TABLE `buildings`
+  MODIFY `building_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;

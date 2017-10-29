@@ -71,6 +71,7 @@
                         <li><a href="{$ROOT_URL}ingame/paardenrace.php">Paardenrace</a></li>
                         <li><a href="{$ROOT_URL}ingame/hogerlager.php">Hoger of lager</a></li>
                         <li><a href="{$ROOT_URL}ingame/bankroven.php">Bankroven</a></li>
+                        <li><a href="{$ROOT_URL}ingame/vliegveld.php">Vliegveld</a></li>
                     </ul>
                 </div>
                 {/if}
